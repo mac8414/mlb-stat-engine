@@ -118,6 +118,42 @@ public class PlayerService {
         }
     }
 
+    public void lookupBattingLeaders(String year) {
+        try {
+            String url = "https://statsapi.mlb.com/api/v1/stats/leaders"
+                    + "?leaderCategories=battingAverage&season=" + year
+                    + "&sportId=1&limit=5&statGroup=hitting";
+            JSONObject json = new JSONObject(get(url));
+            JSONArray leagueLeaders = json.optJSONArray("leagueLeaders");
+
+            if (leagueLeaders == null || leagueLeaders.isEmpty()) {
+                System.out.println("No batting leaders found for " + year + ".");
+                return;
+            }
+
+            JSONArray leaders = leagueLeaders.getJSONObject(0).optJSONArray("leaders");
+            if (leaders == null || leaders.isEmpty()) {
+                System.out.println("No batting leaders found for " + year + ".");
+                return;
+            }
+
+            System.out.println("\n--- Batting Average Leaders | " + year + " ---");
+            System.out.printf("  %-4s %-22s %-25s %s%n", "Rank", "Player", "Team", "AVG");
+            System.out.println("  " + "-".repeat(58));
+            for (int i = 0; i < leaders.length(); i++) {
+                JSONObject leader = leaders.getJSONObject(i);
+                String playerName = leader.getJSONObject("person").getString("fullName");
+                String team = leader.optJSONObject("team") != null
+                        ? leader.getJSONObject("team").getString("name") : "---";
+                String avg = leader.getString("value");
+                int rank = leader.getInt("rank");
+                System.out.printf("  %-4d %-22s %-25s %s%n", rank, playerName, team, avg);
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching leaders: " + e.getMessage());
+        }
+    }
+
     private String get(String url) throws Exception {
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();

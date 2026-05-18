@@ -9,7 +9,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== MLB Stat Engine ===");
-        System.out.println("Type a player name to look up stats, 'clear' to clear screen, or 'quit' to exit.\n");
+        System.out.println("Type a player name, 'leaders' for AVG leaders, 'clear' to clear screen, or 'quit' to exit.\n");
 
         while (true) {
             System.out.print("Search player name: ");
@@ -24,14 +24,16 @@ public class Main {
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
                 System.out.println("=== MLB Stat Engine ===");
-                System.out.println("Type a player name to look up stats, 'clear' to clear screen, or 'quit' to exit.\n");
+                System.out.println("Type a player name, 'leaders' for AVG leaders, 'clear' to clear screen, or 'quit' to exit.\n");
                 continue;
             }
 
             System.out.print("Search year: ");
             String yearInput = scanner.nextLine().trim();
 
-            if (!yearInput.isEmpty()) {
+            if (nameInput.equalsIgnoreCase("leaders")) {
+                service.lookupBattingLeaders(yearInput);
+            } else if (!yearInput.isEmpty()) {
                 service.lookupPlayer(nameInput, yearInput);
             }
             System.out.println();
