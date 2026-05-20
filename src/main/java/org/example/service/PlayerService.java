@@ -118,37 +118,73 @@ public class PlayerService {
         }
     }
 
-    public void lookupBattingLeaders(String year) {
+    public void lookupLeaders(String startYearStr, String endYearStr, String statType) {
         try {
-            String url = "https://statsapi.mlb.com/api/v1/stats/leaders"
-                    + "?leaderCategories=battingAverage&season=" + year
-                    + "&sportId=1&limit=5&statGroup=hitting";
-            JSONObject json = new JSONObject(get(url));
-            JSONArray leagueLeaders = json.optJSONArray("leagueLeaders");
+            int startYear = Integer.parseInt(startYearStr.trim());
+            int endYear = Integer.parseInt(endYearStr.trim());
+            if (endYear < startYear) endYear = startYear;
 
-            if (leagueLeaders == null || leagueLeaders.isEmpty()) {
-                System.out.println("No batting leaders found for " + year + ".");
+            boolean isEra = statType.equalsIgnoreCase("ERA");
+            String category = isEra ? "era" : "battingAverage";
+            String group = isEra ? "pitching" : "hitting";
+            String statLabel = isEra ? "ERA" : "AVG";
+            String title = isEra ? "ERA Leaders (lowest)" : "Batting Average Leaders";
+
+            // Collect top entries per year: map of "Player|Year" -> {value, player, team, year}
+            java.util.List<double[]> values = new java.util.ArrayList<>();
+            java.util.List<String[]> entries = new java.util.ArrayList<>();
+
+            for (int year = startYear; year <= endYear; year++) {
+                String url = "https://statsapi.mlb.com/api/v1/stats/leaders"
+                        + "?leaderCategories=" + category
+                        + "&season=" + year
+                        + "&sportId=1&limit=10&statGroup=" + group;
+                JSONObject json = new JSONObject(get(url));
+                JSONArray leagueLeaders = json.optJSONArray("leagueLeaders");
+                if (leagueLeaders == null || leagueLeaders.isEmpty()) continue;
+
+                JSONArray leaders = leagueLeaders.getJSONObject(0).optJSONArray("leaders");
+                if (leaders == null) continue;
+
+                for (int i = 0; i < leaders.length(); i++) {
+                    JSONObject leader = leaders.getJSONObject(i);
+                    String playerName = leader.getJSONObject("person").getString("fullName");
+                    String team = leader.optJSONObject("team") != null
+                            ? leader.getJSONObject("team").getString("name") : "---";
+                    String val = leader.getString("value");
+                    try {
+                        double numeric = Double.parseDouble(val);
+                        values.add(new double[]{numeric});
+                        entries.add(new String[]{playerName, team, val, String.valueOf(year)});
+                    } catch (NumberFormatException ignored) {}
+                }
+            }
+
+            if (entries.isEmpty()) {
+                System.out.println("No leaders found for " + startYear + "–" + endYear + ".");
                 return;
             }
 
-            JSONArray leaders = leagueLeaders.getJSONObject(0).optJSONArray("leaders");
-            if (leaders == null || leaders.isEmpty()) {
-                System.out.println("No batting leaders found for " + year + ".");
-                return;
+            // Sort: ERA ascending (lowest), AVG descending (highest)
+            java.util.List<Integer> indices = new java.util.ArrayList<>();
+            for (int i = 0; i < entries.size(); i++) indices.add(i);
+            indices.sort((a, b) -> isEra
+                    ? Double.compare(values.get(a)[0], values.get(b)[0])
+                    : Double.compare(values.get(b)[0], values.get(a)[0]));
+
+            String yearRange = startYear == endYear ? String.valueOf(startYear) : startYear + "–" + endYear;
+            System.out.println("\n--- " + title + " | " + yearRange + " ---");
+            System.out.printf("  %-4s %-22s %-25s %-6s %s%n", "Rank", "Player", "Team", statLabel, "Season");
+            System.out.println("  " + "-".repeat(66));
+
+            int shown = 0;
+            for (int i = 0; i < indices.size() && shown < 5; i++, shown++) {
+                String[] e = entries.get(indices.get(i));
+                System.out.printf("  %-4d %-22s %-25s %-6s %s%n", shown + 1, e[0], e[1], e[2], e[3]);
             }
 
-            System.out.println("\n--- Batting Average Leaders | " + year + " ---");
-            System.out.printf("  %-4s %-22s %-25s %s%n", "Rank", "Player", "Team", "AVG");
-            System.out.println("  " + "-".repeat(58));
-            for (int i = 0; i < leaders.length(); i++) {
-                JSONObject leader = leaders.getJSONObject(i);
-                String playerName = leader.getJSONObject("person").getString("fullName");
-                String team = leader.optJSONObject("team") != null
-                        ? leader.getJSONObject("team").getString("name") : "---";
-                String avg = leader.getString("value");
-                int rank = leader.getInt("rank");
-                System.out.printf("  %-4d %-22s %-25s %s%n", rank, playerName, team, avg);
-            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid year format. Please enter a 4-digit year.");
         } catch (Exception e) {
             System.out.println("Error fetching leaders: " + e.getMessage());
         }

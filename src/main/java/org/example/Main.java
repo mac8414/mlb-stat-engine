@@ -9,7 +9,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== MLB Stat Engine ===");
-        System.out.println("Type a player name, 'leaders' for AVG leaders, 'clear' to clear screen, or 'quit' to exit.\n");
+        System.out.println("Commands: player name | 'leaders' | 'clear' | 'quit'\n");
 
         while (true) {
             System.out.print("Search player name: ");
@@ -24,16 +24,26 @@ public class Main {
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
                 System.out.println("=== MLB Stat Engine ===");
-                System.out.println("Type a player name, 'leaders' for AVG leaders, 'clear' to clear screen, or 'quit' to exit.\n");
+                System.out.println("Commands: player name | 'leaders' | 'clear' | 'quit'\n");
+                continue;
+            }
+
+            if (nameInput.equalsIgnoreCase("leaders")) {
+                System.out.print("Start year: ");
+                String startYear = scanner.nextLine().trim();
+                System.out.print("End year (or same as start): ");
+                String endYear = scanner.nextLine().trim();
+                System.out.print("Stat (AVG / ERA): ");
+                String stat = scanner.nextLine().trim();
+                service.lookupLeaders(startYear, endYear, stat);
+                System.out.println();
                 continue;
             }
 
             System.out.print("Search year: ");
             String yearInput = scanner.nextLine().trim();
 
-            if (nameInput.equalsIgnoreCase("leaders")) {
-                service.lookupBattingLeaders(yearInput);
-            } else if (!yearInput.isEmpty()) {
+            if (!yearInput.isEmpty()) {
                 service.lookupPlayer(nameInput, yearInput);
             }
             System.out.println();
