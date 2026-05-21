@@ -7,17 +7,18 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Scanner;
 
 public class PlayerService {
 
     private final HttpClient client = HttpClient.newHttpClient();
 
-    public void lookupPlayer(String name, String year) {
+    public void lookupPlayer(String name, String year, Scanner scanner) {
         try {
             // Step 1: Search for player by name
             String searchUrl = "https://statsapi.mlb.com/api/v1/people/search?names="
                     + name.replace(" ", "+") + "&sportIds=1";
-            String searchBody = get(searchUrl); // REST api get
+            String searchBody = get(searchUrl);
             JSONObject searchJson = new JSONObject(searchBody);
             JSONArray people = searchJson.optJSONArray("people");
 
@@ -26,17 +27,37 @@ public class PlayerService {
                 return;
             }
 
-            // If multiple results, show list and pick first
+            JSONObject player;
             if (people.length() > 1) {
-                System.out.println("Found " + people.length() + " players:");
+                // Fetch the team each player was on in the requested year to help disambiguate
+                System.out.println("Found " + people.length() + " players named \"" + name + "\":");
                 for (int i = 0; i < people.length(); i++) {
                     JSONObject p = people.getJSONObject(i);
-                    System.out.printf("  [%d] %s%n", i + 1, p.getString("fullName"));
+                    String teamName = getTeamForYear(p.getInt("id"), year);
+                    System.out.printf("  [%d] %-25s  %s%n", i + 1, p.getString("fullName"),
+                            teamName.isEmpty() ? "(no stats in " + year + ")" : teamName);
                 }
-                System.out.println("Showing stats for: " + people.getJSONObject(0).getString("fullName"));
-            }
+                System.out.print("Which team are you looking for? ");
+                String teamQuery = scanner.nextLine().trim().toLowerCase();
 
-            JSONObject player = people.getJSONObject(0);
+                // Find the best match by team name
+                JSONObject match = null;
+                for (int i = 0; i < people.length(); i++) {
+                    JSONObject p = people.getJSONObject(i);
+                    String teamName = getTeamForYear(p.getInt("id"), year);
+                    if (teamName.toLowerCase().contains(teamQuery)) {
+                        match = p;
+                        break;
+                    }
+                }
+                if (match == null) {
+                    System.out.println("No match found for team \"" + teamQuery + "\". Showing first result.");
+                    match = people.getJSONObject(0);
+                }
+                player = match;
+            } else {
+                player = people.getJSONObject(0);
+            }
             int id = player.getInt("id");
             String fullName = player.getString("fullName");
             String position = player.optJSONObject("primaryPosition") != null
@@ -188,6 +209,25 @@ public class PlayerService {
         } catch (Exception e) {
             System.out.println("Error fetching leaders: " + e.getMessage());
         }
+    }
+
+    private String getTeamForYear(int playerId, String year) {
+        try {
+            String url = "https://statsapi.mlb.com/api/v1/people/" + playerId
+                    + "/stats?stats=season&group=hitting,pitching&season=" + year;
+            JSONObject json = new JSONObject(get(url));
+            JSONArray stats = json.optJSONArray("stats");
+            if (stats != null) {
+                for (int i = 0; i < stats.length(); i++) {
+                    JSONArray splits = stats.getJSONObject(i).optJSONArray("splits");
+                    if (splits != null && !splits.isEmpty()) {
+                        JSONObject team = splits.getJSONObject(0).optJSONObject("team");
+                        if (team != null) return team.getString("name");
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return "";
     }
 
     private String get(String url) throws Exception {

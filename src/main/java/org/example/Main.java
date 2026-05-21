@@ -44,7 +44,7 @@ public class Main {
             String yearInput = scanner.nextLine().trim();
 
             if (!yearInput.isEmpty()) {
-                service.lookupPlayer(nameInput, yearInput);
+                service.lookupPlayer(nameInput, yearInput, scanner);
             }
             System.out.println();
         }
