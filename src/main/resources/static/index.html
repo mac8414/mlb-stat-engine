@@ -318,7 +318,16 @@
     .leader-row:last-child { border-bottom: none; }
     .leader-row:hover { background: #162e16; }
     .leader-rank { font-family: 'Oswald', sans-serif; font-size: 1.1rem; color: #8ab84a; }
-    .leader-info .leader-name { font-size: 0.85rem; color: #f0f0e0; }
+    .leader-info .leader-name {
+      font-size: 0.85rem;
+      color: #f0f0e0;
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-color: #3a6a3a;
+      text-underline-offset: 3px;
+      transition: color 0.15s;
+    }
+    .leader-info .leader-name:hover { color: #c0e080; text-decoration-color: #8ab84a; }
     .leader-info .leader-team { font-size: 0.72rem; color: #5a8a3a; margin-top: 2px; }
     .leader-value {
       font-family: 'Oswald', sans-serif;
@@ -548,13 +557,21 @@
           <div class="leader-row">
             <div class="leader-rank">${l.rank}</div>
             <div class="leader-info">
-              <div class="leader-name">${l.playerName}</div>
+              <div class="leader-name" onclick="loadPlayerFromLeader('${l.playerName.replace(/'/g, "\\'")}', '${l.season}')">${l.playerName}</div>
               <div class="leader-team">${l.team}</div>
             </div>
             <div class="leader-value">${l.value}</div>
             <div class="leader-season">${l.season}</div>
           </div>`).join('')}
       </div>`;
+  }
+
+  function loadPlayerFromLeader(name, year) {
+    document.getElementById('player-name').value = name;
+    document.getElementById('player-year').value = year;
+    // Scroll to top so the result is visible
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    searchPlayer();
   }
 </script>
 </body>
