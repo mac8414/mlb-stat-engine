@@ -9,6 +9,10 @@ public class PlayerStatsResponse {
     // Set when stats are found
     public int playerId;
     public String fullName, position, team, season, asOf;
+    public String careerBestAvg;
+    public String careerBestAvgYear;
+    public String careerBestEra;
+    public String careerBestEraYear;
     public HittingStats hitting;
     public PitchingStats pitching;
     public String error;

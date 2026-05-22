@@ -361,7 +361,7 @@
 
 <header>
   <h1>MLB Stat Engine</h1>
-  <div class="subtitle">Fenway Park &mdash; Boston, MA</div>
+  <h1>    </h1>
   <div class="bulb-row">
     <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
     <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
@@ -398,7 +398,8 @@
           <input id="end-year" type="text" placeholder="End year" maxlength="4"/>
           <select id="stat-type">
             <option value="AVG">AVG</option>
-            <option value="ERA">ERA</option>
+            <option value="ERA">ERA — Starters</option>
+            <option value="ERA_RP">ERA — Relievers</option>
           </select>
           <button class="search-btn" onclick="searchLeaders()">Go</button>
         </div>
@@ -510,6 +511,17 @@
           </div>
           <div class="scoreboard-row">
             ${cell(p.strikeOuts,'SO')}${cell(p.walks,'BB')}${cell(p.games,'G')}
+          </div>
+        </div>`;
+    }
+
+    if (d.careerBestAvg || d.careerBestEra) {
+      statsHtml += `
+        <div class="stat-section" style="border-top:1px solid #1e4e1e">
+          <div class="stat-section-label">&#9733; Career Best</div>
+          <div class="scoreboard-row">
+            ${d.careerBestAvg ? cell(d.careerBestAvg, 'AVG', true) + cell(d.careerBestAvgYear, 'Season', true) : ''}
+            ${d.careerBestEra ? cell(d.careerBestEra, 'ERA', true) + cell(d.careerBestEraYear, 'Season', true) : ''}
           </div>
         </div>`;
     }

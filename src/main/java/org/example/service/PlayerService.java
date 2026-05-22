@@ -125,6 +125,67 @@ public class PlayerService {
                 response.error = "No stats found for " + response.fullName + " in " + year + ".";
             }
 
+            // Fetch career best batting average
+            try {
+                String careerUrl = "https://statsapi.mlb.com/api/v1/people/" + id
+                        + "/stats?stats=yearByYear&group=hitting&sportId=1";
+                JSONArray careerStats = new JSONObject(get(careerUrl)).optJSONArray("stats");
+                if (careerStats != null && !careerStats.isEmpty()) {
+                    JSONArray splits = careerStats.getJSONObject(0).optJSONArray("splits");
+                    double bestAvg = -1;
+                    String bestYear = null;
+                    if (splits != null) {
+                        for (int i = 0; i < splits.length(); i++) {
+                            JSONObject split = splits.getJSONObject(i);
+                            String avgStr = split.getJSONObject("stat").optString("avg", "");
+                            String splitYear = split.optString("season", "");
+                            int atBats = split.getJSONObject("stat").optInt("atBats", 0);
+                            if (!avgStr.isEmpty() && atBats >= 50) {
+                                try {
+                                    double avg = Double.parseDouble(avgStr);
+                                    if (avg > bestAvg) { bestAvg = avg; bestYear = splitYear; }
+                                } catch (NumberFormatException ignored) {}
+                            }
+                        }
+                    }
+                    if (bestYear != null) {
+                        response.careerBestAvg = String.format("%.3f", bestAvg);
+                        response.careerBestAvgYear = bestYear;
+                    }
+                }
+            } catch (Exception ignored) {}
+
+            // Fetch career best ERA
+            try {
+                String pitchingCareerUrl = "https://statsapi.mlb.com/api/v1/people/" + id
+                        + "/stats?stats=yearByYear&group=pitching&sportId=1";
+                JSONArray careerPitching = new JSONObject(get(pitchingCareerUrl)).optJSONArray("stats");
+                if (careerPitching != null && !careerPitching.isEmpty()) {
+                    JSONArray splits = careerPitching.getJSONObject(0).optJSONArray("splits");
+                    double bestEra = Double.MAX_VALUE;
+                    String bestYear = null;
+                    if (splits != null) {
+                        for (int i = 0; i < splits.length(); i++) {
+                            JSONObject split = splits.getJSONObject(i);
+                            String eraStr = split.getJSONObject("stat").optString("era", "");
+                            String splitYear = split.optString("season", "");
+                            // Require minimum innings to avoid fluky small samples
+                            String ipStr = split.getJSONObject("stat").optString("inningsPitched", "0");
+                            double ip = Double.parseDouble(ipStr.isEmpty() ? "0" : ipStr);
+                            if (!eraStr.isEmpty() && ip >= 30) {
+                                try {
+                                    double era = Double.parseDouble(eraStr);
+                                    if (era < bestEra) { bestEra = era; bestYear = splitYear; }
+                                } catch (NumberFormatException ignored) {}
+                            }
+                        }
+                    }
+                    if (bestYear != null) {
+                        response.careerBestEra = String.format("%.2f", bestEra);
+                        response.careerBestEraYear = bestYear;
+                    }
+                }
+            } catch (Exception ignored) {}
         } catch (Exception e) {
             response.error = "Error fetching stats: " + e.getMessage();
         }
@@ -138,42 +199,93 @@ public class PlayerService {
             int endYear = Integer.parseInt(endYearStr.trim());
             if (endYear < startYear) endYear = startYear;
 
-            boolean isEra = statType.equalsIgnoreCase("ERA");
-            String category = isEra ? "era" : "battingAverage";
-            String group = isEra ? "pitching" : "hitting";
-            response.statLabel = isEra ? "ERA" : "AVG";
-            response.title = isEra ? "ERA Leaders (Lowest)" : "Batting Average Leaders";
+            boolean isEra   = statType.equalsIgnoreCase("ERA");
+            boolean isEraRp = statType.equalsIgnoreCase("ERA_RP");
+            boolean isPitching = isEra || isEraRp;
+            response.statLabel = isPitching ? "ERA" : "AVG";
+            response.title = isEra ? "ERA Leaders — Starters (Lowest)"
+                    : isEraRp ? "ERA Leaders — Relievers (Lowest)"
+                    : "Batting Average Leaders";
             response.yearRange = startYear == endYear ? String.valueOf(startYear) : startYear + "-" + endYear;
 
             List<double[]> values = new ArrayList<>();
             List<LeaderEntry> entries = new ArrayList<>();
 
+            // MLB qualification thresholds:
+            //   Batting: 3.1 PA/game = 502 PA over 162 games
+            //   Starters ERA: 1 IP/game = 162 IP over 162 games
+            //   Relievers ERA: 50–161 IP (meaningful sample, excludes starters)
+            final int MIN_PA          = 502;
+            final double MIN_IP_SP    = 162.0;
+            final double MIN_IP_RP    = 50.0;
+            final double MAX_IP_RP    = 161.2;
+
             for (int year = startYear; year <= endYear; year++) {
-                String url = "https://statsapi.mlb.com/api/v1/stats/leaders"
-                        + "?leaderCategories=" + category
-                        + "&season=" + year
-                        + "&sportId=1&limit=10&statGroup=" + group;
-                JSONObject json = new JSONObject(get(url));
-                JSONArray leagueLeaders = json.optJSONArray("leagueLeaders");
-                if (leagueLeaders == null || leagueLeaders.isEmpty()) continue;
+                if (isPitching) {
+                    String url = "https://statsapi.mlb.com/api/v1/stats"
+                            + "?stats=season&group=pitching&season=" + year
+                            + "&sportIds=1&playerPool=all&limit=1000&sortStat=era&order=asc";
+                    JSONObject json = new JSONObject(get(url));
+                    JSONArray statsArr = json.optJSONArray("stats");
+                    if (statsArr == null || statsArr.isEmpty()) continue;
+                    JSONArray splits = statsArr.getJSONObject(0).optJSONArray("splits");
+                    if (splits == null) continue;
 
-                JSONArray leaders = leagueLeaders.getJSONObject(0).optJSONArray("leaders");
-                if (leaders == null) continue;
+                    for (int i = 0; i < splits.length(); i++) {
+                        JSONObject split = splits.getJSONObject(i);
+                        JSONObject stat = split.getJSONObject("stat");
+                        String eraStr = stat.optString("era", "");
+                        String ipStr  = stat.optString("inningsPitched", "0");
+                        if (eraStr.isEmpty()) continue;
+                        try {
+                            double era = Double.parseDouble(eraStr);
+                            double ip  = Double.parseDouble(ipStr.isEmpty() ? "0" : ipStr);
+                            // Apply IP window based on starter vs reliever mode
+                            if (isEra   && ip < MIN_IP_SP) continue;
+                            if (isEraRp && (ip < MIN_IP_RP || ip > MAX_IP_RP)) continue;
+                            String playerName = split.getJSONObject("player").getString("fullName");
+                            String team = split.optJSONObject("team") != null
+                                    ? split.getJSONObject("team").getString("name") : "---";
+                            LeaderEntry entry = new LeaderEntry();
+                            entry.playerName = playerName;
+                            entry.team = team;
+                            entry.value = eraStr;
+                            entry.season = String.valueOf(year);
+                            values.add(new double[]{era});
+                            entries.add(entry);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                } else {
+                    // Fetch all hitters via stats endpoint; apply 502 PA minimum (MLB standard qualifier).
+                    String url = "https://statsapi.mlb.com/api/v1/stats"
+                            + "?stats=season&group=hitting&season=" + year
+                            + "&sportIds=1&playerPool=all&limit=1000&sortStat=avg&order=desc";
+                    JSONObject json = new JSONObject(get(url));
+                    JSONArray statsArr = json.optJSONArray("stats");
+                    if (statsArr == null || statsArr.isEmpty()) continue;
+                    JSONArray splits = statsArr.getJSONObject(0).optJSONArray("splits");
+                    if (splits == null) continue;
 
-                for (int i = 0; i < leaders.length(); i++) {
-                    JSONObject leader = leaders.getJSONObject(i);
-                    String val = leader.getString("value");
-                    try {
-                        double numeric = Double.parseDouble(val);
-                        LeaderEntry entry = new LeaderEntry();
-                        entry.playerName = leader.getJSONObject("person").getString("fullName");
-                        entry.team = leader.optJSONObject("team") != null
-                                ? leader.getJSONObject("team").getString("name") : "---";
-                        entry.value = val;
-                        entry.season = String.valueOf(year);
-                        values.add(new double[]{numeric});
-                        entries.add(entry);
-                    } catch (NumberFormatException ignored) {}
+                    for (int i = 0; i < splits.length(); i++) {
+                        JSONObject split = splits.getJSONObject(i);
+                        JSONObject stat = split.getJSONObject("stat");
+                        String avgStr = stat.optString("avg", "");
+                        int pa = stat.optInt("plateAppearances", 0);
+                        if (avgStr.isEmpty() || pa < MIN_PA) continue;
+                        try {
+                            double avg = Double.parseDouble(avgStr);
+                            String playerName = split.getJSONObject("player").getString("fullName");
+                            String team = split.optJSONObject("team") != null
+                                    ? split.getJSONObject("team").getString("name") : "---";
+                            LeaderEntry entry = new LeaderEntry();
+                            entry.playerName = playerName;
+                            entry.team = team;
+                            entry.value = avgStr;
+                            entry.season = String.valueOf(year);
+                            values.add(new double[]{avg});
+                            entries.add(entry);
+                        } catch (NumberFormatException ignored) {}
+                    }
                 }
             }
 
@@ -184,7 +296,7 @@ public class PlayerService {
 
             List<Integer> indices = new ArrayList<>();
             for (int i = 0; i < entries.size(); i++) indices.add(i);
-            indices.sort((a, b) -> isEra
+            indices.sort((a, b) -> isPitching
                     ? Double.compare(values.get(a)[0], values.get(b)[0])
                     : Double.compare(values.get(b)[0], values.get(a)[0]));
 
