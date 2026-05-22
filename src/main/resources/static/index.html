@@ -13,23 +13,18 @@
       background: #1a3a1a;
       color: #f0f0e0;
       min-height: 100vh;
-      background-image:
-        repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent 2px,
-          rgba(0,0,0,0.04) 2px,
-          rgba(0,0,0,0.04) 4px
-        );
+      background-image: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+      );
     }
 
- */ HEADER     /* 
+    /* HEADER */
     header {
       background: #0e2a0e;
       border-bottom: 4px solid #5a8a2a;
       padding: 18px 32px;
       text-align: center;
-      position: relative;
     }
     header h1 {
       font-family: 'Oswald', sans-serif;
@@ -71,39 +66,26 @@
       93% { opacity:0.5; }
     }
 
- */ TABS     /* 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      background: #0e2a0e;
-      border-bottom: 2px solid #2a5a2a;
-      padding: 0 32px;
+    /* MAIN  two columns */LAYOUT 
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      padding: 28px 32px;
+      max-width: 1300px;
+      margin: 0 auto;
+      align-items: start;
     }
-    .tab {
-      padding: 12px 32px;
-      cursor: pointer;
-      font-family: 'Oswald', sans-serif;
-      font-size: 0.85rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #6a9a3a;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s;
+    @media (max-width: 900px) {
+      .main-layout { grid-template-columns: 1fr; }
     }
-    .tab.active { color: #f0f0e0; border-bottom-color: #8ab84a; }
-    .tab:hover:not(.active) { color: #aad06a; }
 
- */ LAYOUT     /* 
-    .page { display: none; padding: 32px; max-width: 860px; margin: 0 auto; }
-    .page.active { display: block; }
-
-  */SEARCH PANEL     /* 
+    /* PANELS */
     .scoreboard-panel {
       background: #0e2a0e;
       border: 2px solid #2a5a2a;
       border-radius: 4px;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
       overflow: hidden;
     }
     .panel-label {
@@ -117,10 +99,11 @@
     }
     .panel-body { padding: 20px; }
 
+    /* INPUTS */
     .input-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .input-row input, .input-row select {
       flex: 1;
-      min-width: 150px;
+      min-width: 120px;
       padding: 10px 14px;
       background: #162e16;
       border: 1px solid #3a6a3a;
@@ -137,7 +120,6 @@
       box-shadow: 0 0 8px rgba(138,184,74,0.3);
     }
     .input-row select option { background: #0e2a0e; }
-
     button.search-btn {
       padding: 10px 24px;
       background: #2a5a2a;
@@ -150,18 +132,18 @@
       text-transform: uppercase;
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     button.search-btn:hover { background: #3a7a3a; box-shadow: 0 0 10px rgba(138,184,74,0.3); }
 
- */ PICKER     /* 
+    /*  rendered dynamically, hidden until needed */PICKER 
     #picker {
       background: #0e2a0e;
       border: 2px solid #2a5a2a;
       border-radius: 4px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       overflow: hidden;
     }
-    #picker .panel-label { background: #1a4a1a; }
     #picker-list { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
     .match-btn {
       background: #162e16;
@@ -178,7 +160,7 @@
     .match-btn:hover { border-color: #8ab84a; background: #1e3e1e; }
     .match-btn .match-team { color: #6a9a3a; font-size: 0.8rem; margin-top: 3px; }
 
-  */STATS CARD     /* 
+    /* STATS CARD */
     #stats-card {
       background: #0e2a0e;
       border: 2px solid #2a5a2a;
@@ -186,7 +168,39 @@
       overflow: hidden;
     }
 
-    /* Scoreboard header row */
+    /* Player photo panel */
+    .player-photo-panel {
+      background: #0e2a0e;
+      border: 2px solid #2a5a2a;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .player-photo-panel .panel-label { width: 100%; text-align: center; }
+    .player-photo-panel img {
+      width: 100%;
+      max-width: 220px;
+      display: block;
+      padding: 12px;
+      filter: sepia(20%) contrast(1.05);
+    }
+    .player-photo-panel img.photo-error {
+      opacity: 0.3;
+      padding: 32px;
+    }
+
+    /* Wrapper: stats left, photo right */
+    .result-with-photo {
+      display: grid;
+      grid-template-columns: 1fr 160px;
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 600px) {
+      .result-with-photo { grid-template-columns: 1fr; }
+    }
     .card-header {
       background: #162e16;
       border-bottom: 2px solid #2a5a2a;
@@ -217,7 +231,7 @@
     .season-badge .yr { font-family: 'Oswald', sans-serif; font-size: 1.4rem; color: #c0e080; letter-spacing: 2px; }
     .season-badge .as-of { font-size: 0.65rem; color: #6a9a3a; letter-spacing: 1px; margin-top: 2px; }
 
-    /* Stat  scoreboard style */rows 
+    /* SCOREBOARD ROWS */
     .stat-section { padding: 16px 20px; }
     .stat-section + .stat-section { border-top: 1px solid #1e4e1e; }
     .stat-section-label {
@@ -228,8 +242,6 @@
       text-transform: uppercase;
       margin-bottom: 12px;
     }
-
-    /* The actual scoreboard grid */
     .scoreboard-row {
       display: flex;
       border: 1px solid #2a5a2a;
@@ -250,7 +262,6 @@
       font-weight: 700;
       color: #f0f0e0;
       letter-spacing: 1px;
-      text-shadow: 0 0 8px rgba(240,240,224,0.2);
     }
     .sb-cell .sb-lbl {
       font-size: 0.6rem;
@@ -259,11 +270,10 @@
       text-transform: uppercase;
       margin-top: 4px;
     }
-    /* Highlight key stats */
     .sb-cell.key { background: #1a3a1a; }
     .sb-cell.key .sb-val { color: #c0e080; text-shadow: 0 0 12px rgba(192,224,128,0.4); }
 
- */ LEADERS     /* 
+    /* LEADERS BOARD */
     .leaders-board {
       background: #0e2a0e;
       border: 2px solid #2a5a2a;
@@ -286,43 +296,38 @@
       color: #f0f0e0;
     }
     .leaders-title .lt-range { color: #6a9a3a; font-size: 0.8rem; letter-spacing: 2px; }
-
     .leaders-header {
       display: grid;
-      grid-template-columns: 40px 1fr 1fr 70px 60px;
-      padding: 8px 20px;
+      grid-template-columns: 32px 1fr 60px 52px;
+      padding: 8px 16px;
       background: #1a4a1a;
       border-bottom: 1px solid #2a5a2a;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       letter-spacing: 3px;
       color: #5a8a3a;
       text-transform: uppercase;
     }
     .leader-row {
       display: grid;
-      grid-template-columns: 40px 1fr 1fr 70px 60px;
-      padding: 14px 20px;
+      grid-template-columns: 32px 1fr 60px 52px;
+      padding: 12px 16px;
       border-bottom: 1px solid #162e16;
       align-items: center;
       transition: background 0.15s;
     }
     .leader-row:last-child { border-bottom: none; }
     .leader-row:hover { background: #162e16; }
-    .leader-rank {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.1rem;
-      color: #8ab84a;
-    }
-    .leader-name { font-size: 0.9rem; color: #f0f0e0; }
-    .leader-team { font-size: 0.78rem; color: #5a8a3a; }
+    .leader-rank { font-family: 'Oswald', sans-serif; font-size: 1.1rem; color: #8ab84a; }
+    .leader-info .leader-name { font-size: 0.85rem; color: #f0f0e0; }
+    .leader-info .leader-team { font-size: 0.72rem; color: #5a8a3a; margin-top: 2px; }
     .leader-value {
       font-family: 'Oswald', sans-serif;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #c0e080;
       text-align: right;
       text-shadow: 0 0 8px rgba(192,224,128,0.3);
     }
-    .leader-season { font-size: 0.75rem; color: #5a8a3a; text-align: right; }
+    .leader-season { font-size: 0.72rem; color: #5a8a3a; text-align: right; }
 
     .error-msg {
       background: #2a1a0e;
@@ -335,7 +340,7 @@
     }
     .spinner {
       text-align: center;
-      padding: 40px;
+      padding: 32px;
       color: #4a7a4a;
       letter-spacing: 3px;
       font-size: 0.85rem;
@@ -346,7 +351,7 @@
 <body>
 
 <header>
-  <h1>&#9864; MLB Stat Engine</h1>
+  <h1>MLB Stat Engine</h1>
   <div class="subtitle">Fenway Park &mdash; Boston, MA</div>
   <div class="bulb-row">
     <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
@@ -355,61 +360,48 @@
   </div>
 </header>
 
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('player')">Player Lookup</div>
-  <div class="tab" onclick="switchTab('leaders')">Leaders Board</div>
-</div>
+<div class="main-layout">
 
-<!-- PLAYER TAB -->
-<div id="tab-player" class="page active">
-  <div class="scoreboard-panel">
-    <div class="panel-label">Search Player</div>
-    <div class="panel-body">
-      <div class="input-row">
-        <input id="player-name" type="text" placeholder="Player name..." />
-        <input id="player-year" type="text" placeholder="Year" maxlength="4" style="max-width:110px"/>
-        <button class="search-btn" onclick="searchPlayer()">Search</button>
+  <div class="left-col">
+    <div class="scoreboard-panel">
+      <div class="panel-label">Search Player</div>
+      <div class="panel-body">
+        <div class="input-row">
+          <input id="player-name" type="text" placeholder="Player name..." />
+          <input id="player-year" type="text" placeholder="Year" maxlength="4" style="max-width:100px"/>
+          <button class="search-btn" onclick="searchPlayer()">Search</button>
+        </div>
       </div>
     </div>
+
+    <!-- Picker: fully injected by JS, only appears on multiple matches -->
+    <div id="picker" class="hidden"></div>
+
+    <div id="player-result" class="hidden"></div>
   </div>
-
-  <div id="picker" class="hidden">
-    <div class="panel-label">Multiple Players Found &mdash; Select One</div>
-    <div id="picker-list"></div>
-  </div>
-
-  <div id="player-result" class="hidden"></div>
-</div>
-
-<!-- LEADERS TAB -->
-<div id="tab-leaders" class="page">
-  <div class="scoreboard-panel">
-    <div class="panel-label">Leaders Board</div>
-    <div class="panel-body">
-      <div class="input-row">
-        <input id="start-year" type="text" placeholder="Start year" maxlength="4" style="max-width:120px"/>
-        <input id="end-year" type="text" placeholder="End year" maxlength="4" style="max-width:120px"/>
-        <select id="stat-type">
-          <option value="AVG">Batting Average (AVG)</option>
-          <option value="ERA">ERA (Lowest)</option>
-        </select>
-        <button class="search-btn" onclick="searchLeaders()">Search</button>
+  
+  <div class="right-col">
+    <div class="scoreboard-panel">
+      <div class="panel-label">Leaders Board</div>
+      <div class="panel-body">
+        <div class="input-row">
+          <input id="start-year" type="text" placeholder="Start year" maxlength="4"/>
+          <input id="end-year" type="text" placeholder="End year" maxlength="4"/>
+          <select id="stat-type">
+            <option value="AVG">AVG</option>
+            <option value="ERA">ERA</option>
+          </select>
+          <button class="search-btn" onclick="searchLeaders()">Go</button>
+        </div>
       </div>
     </div>
+
+    <div id="leaders-result"></div>
   </div>
 
-  <div id="leaders-result"></div>
 </div>
 
 <script>
-  function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach((t, i) => {
-      t.classList.toggle('active', ['player','leaders'][i] === tab);
-    });
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
-  }
-
   document.getElementById('player-name').addEventListener('keydown', e => { if (e.key === 'Enter') searchPlayer(); });
   document.getElementById('player-year').addEventListener('keydown', e => { if (e.key === 'Enter') searchPlayer(); });
 
@@ -423,8 +415,8 @@
 
     const resultEl = document.getElementById('player-result');
     const pickerEl = document.getElementById('picker');
-    resultEl.classList.add('hidden');
     pickerEl.classList.add('hidden');
+    pickerEl.innerHTML = '';
     resultEl.innerHTML = '<div class="spinner">[ LOADING... ]</div>';
     resultEl.classList.remove('hidden');
 
@@ -436,8 +428,11 @@
     resultEl.innerHTML = '';
 
     if (data.multipleMatches) {
-      const list = document.getElementById('picker-list');
-      list.innerHTML = '';
+      // Build picker with label entirely in  only shown when neededJS 
+      pickerEl.innerHTML = `
+        <div class="panel-label">Multiple Players Found &mdash; Select One</div>
+        <div id="picker-list" style="padding:12px;display:flex;flex-direction:column;gap:8px"></div>`;
+      const list = pickerEl.querySelector('#picker-list');
       data.multipleMatches.forEach(m => {
         const btn = document.createElement('button');
         btn.className = 'match-btn';
@@ -467,7 +462,9 @@
   }
 
   function renderPlayerCard(d) {
-    let html = `
+    const photoUrl = `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${d.playerId}/headshot/67/current`;
+
+    let statsHtml = `
       <div id="stats-card">
         <div class="card-header">
           <div>
@@ -482,7 +479,7 @@
 
     if (d.hitting) {
       const h = d.hitting;
-      html += `
+      statsHtml += `
         <div class="stat-section">
           <div class="stat-section-label">&#9644; Hitting</div>
           <div class="scoreboard-row">
@@ -496,7 +493,7 @@
 
     if (d.pitching) {
       const p = d.pitching;
-      html += `
+      statsHtml += `
         <div class="stat-section">
           <div class="stat-section-label">&#9644; Pitching</div>
           <div class="scoreboard-row">
@@ -508,8 +505,17 @@
         </div>`;
     }
 
-    html += `</div>`;
-    return html;
+    statsHtml += `</div>`;
+
+    const photoHtml = `
+      <div class="player-photo-panel">
+        <div class="panel-label">Photo</div>
+        <img src="${photoUrl}"
+             alt="${d.fullName}"
+             onerror="this.src='';this.classList.add('photo-error');this.alt='No photo';" />
+      </div>`;
+
+    return `<div class="result-with-photo">${statsHtml}${photoHtml}</div>`;
   }
 
   async function searchLeaders() {
@@ -536,13 +542,15 @@
           <span class="lt-range">${data.yearRange}</span>
         </div>
         <div class="leaders-header">
-          <span>#</span><span>Player</span><span>Team</span><span style="text-align:right">${data.statLabel}</span><span style="text-align:right">Season</span>
+          <span>#</span><span>Player</span><span style="text-align:right">${data.statLabel}</span><span style="text-align:right">Season</span>
         </div>
         ${data.leaders.map(l => `
           <div class="leader-row">
             <div class="leader-rank">${l.rank}</div>
-            <div class="leader-name">${l.playerName}</div>
-            <div class="leader-team">${l.team}</div>
+            <div class="leader-info">
+              <div class="leader-name">${l.playerName}</div>
+              <div class="leader-team">${l.team}</div>
+            </div>
             <div class="leader-value">${l.value}</div>
             <div class="leader-season">${l.season}</div>
           </div>`).join('')}

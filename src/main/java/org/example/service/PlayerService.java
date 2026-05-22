@@ -63,6 +63,7 @@ public class PlayerService {
             }
 
             int id = player.getInt("id");
+            response.playerId = id;
             response.fullName = player.getString("fullName");
             response.position = player.optJSONObject("primaryPosition") != null
                     ? player.getJSONObject("primaryPosition").getString("name") : "Unknown";

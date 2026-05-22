@@ -7,6 +7,7 @@ public class PlayerStatsResponse {
     public List<PlayerMatch> multipleMatches;
 
     // Set when stats are found
+    public int playerId;
     public String fullName, position, team, season, asOf;
     public HittingStats hitting;
     public PitchingStats pitching;
