@@ -1,90 +1,87 @@
 package org.example.service;
 
+import org.example.model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
+@Service
 public class PlayerService {
 
     private final HttpClient client = HttpClient.newHttpClient();
 
-    public void lookupPlayer(String name, String year, Scanner scanner) {
+    public PlayerStatsResponse getPlayerStats(String name, String year, String teamHint) {
+        PlayerStatsResponse response = new PlayerStatsResponse();
         try {
-            // Step 1: Search for player by name
             String searchUrl = "https://statsapi.mlb.com/api/v1/people/search?names="
                     + name.replace(" ", "+") + "&sportIds=1";
-            String searchBody = get(searchUrl);
-            JSONObject searchJson = new JSONObject(searchBody);
-            JSONArray people = searchJson.optJSONArray("people");
+            JSONArray people = new JSONObject(get(searchUrl)).optJSONArray("people");
 
             if (people == null || people.isEmpty()) {
-                System.out.println("No players found for: " + name);
-                return;
+                response.error = "No players found for: " + name;
+                return response;
             }
 
             JSONObject player;
-            if (people.length() > 1) {
-                // Fetch the team each player was on in the requested year to help disambiguate
-                System.out.println("Found " + people.length() + " players named \"" + name + "\":");
+            if (people.length() > 1 && (teamHint == null || teamHint.isBlank())) {
+                // Need  return candidate listdisambiguation 
+                List<PlayerMatch> matches = new ArrayList<>();
                 for (int i = 0; i < people.length(); i++) {
                     JSONObject p = people.getJSONObject(i);
-                    String teamName = getTeamForYear(p.getInt("id"), year);
-                    System.out.printf("  [%d] %-25s  %s%n", i + 1, p.getString("fullName"),
-                            teamName.isEmpty() ? "(no stats in " + year + ")" : teamName);
+                    PlayerMatch m = new PlayerMatch();
+                    m.id = p.getInt("id");
+                    m.fullName = p.getString("fullName");
+                    m.team = getTeamForYear(m.id, year);
+                    matches.add(m);
                 }
-                System.out.print("Which team are you looking for? ");
-                String teamQuery = scanner.nextLine().trim().toLowerCase();
-
-                // Find the best match by team name
+                response.multipleMatches = matches;
+                return response;
+            } else if (people.length() > 1) {
+                // Use teamHint to pick the right player
                 JSONObject match = null;
                 for (int i = 0; i < people.length(); i++) {
                     JSONObject p = people.getJSONObject(i);
-                    String teamName = getTeamForYear(p.getInt("id"), year);
-                    if (teamName.toLowerCase().contains(teamQuery)) {
+                    String team = getTeamForYear(p.getInt("id"), year);
+                    if (team.toLowerCase().contains(teamHint.toLowerCase())) {
                         match = p;
                         break;
                     }
                 }
-                if (match == null) {
-                    System.out.println("No match found for team \"" + teamQuery + "\". Showing first result.");
-                    match = people.getJSONObject(0);
-                }
-                player = match;
+                player = match != null ? match : people.getJSONObject(0);
             } else {
                 player = people.getJSONObject(0);
             }
+
             int id = player.getInt("id");
-            String fullName = player.getString("fullName");
-            String position = player.optJSONObject("primaryPosition") != null
-                    ? player.getJSONObject("primaryPosition").getString("name")
-                    : "Unknown";
+            response.fullName = player.getString("fullName");
+            response.position = player.optJSONObject("primaryPosition") != null
+                    ? player.getJSONObject("primaryPosition").getString("name") : "Unknown";
+            response.season = year;
 
-            System.out.println("\n--- " + fullName + " | " + position + " ---");
+            int currentYear = Year.now().getValue();
+            response.asOf = year.equals(String.valueOf(currentYear))
+                    ? LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, yyyy"))
+                    : "End of season";
 
-            // Step 2: Fetch stats for the requested season
-            int currentYear = java.time.Year.now().getValue();
-            boolean isCurrentSeason = year.equals(String.valueOf(currentYear));
-            String asOf = isCurrentSeason
-                    ? java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("MMMM d, yyyy"))
-                    : "end of season";
             String statsUrl = "https://statsapi.mlb.com/api/v1/people/" + id
                     + "/stats?stats=season&group=hitting,pitching&season=" + year;
-            String statsBody = get(statsUrl);
-            JSONObject statsJson = new JSONObject(statsBody);
-            JSONArray statsArray = statsJson.optJSONArray("stats");
+            JSONArray statsArray = new JSONObject(get(statsUrl)).optJSONArray("stats");
 
             if (statsArray == null || statsArray.isEmpty()) {
-                System.out.println("No stats available for " + year + ".");
-                return;
+                response.error = "No stats found for " + response.fullName + " in " + year + ".";
+                return response;
             }
 
-            boolean foundAny = false;
-            boolean headerPrinted = false;
             for (int i = 0; i < statsArray.length(); i++) {
                 JSONObject statGroup = statsArray.getJSONObject(i);
                 String group = statGroup.getJSONObject("group").getString("displayName");
@@ -92,54 +89,49 @@ public class PlayerService {
                 if (splits == null || splits.isEmpty()) continue;
 
                 JSONObject stat = splits.getJSONObject(0).getJSONObject("stat");
-                String team = splits.getJSONObject(0).optJSONObject("team") != null
-                        ? splits.getJSONObject(0).getJSONObject("team").getString("name")
-                        : "";
-
-                foundAny = true;
-                if (!headerPrinted) {
-                    System.out.printf("Team: %s | Season: %s | As of: %s%n", team, year, asOf);
-                    headerPrinted = true;
+                if (response.team == null && splits.getJSONObject(0).optJSONObject("team") != null) {
+                    response.team = splits.getJSONObject(0).getJSONObject("team").getString("name");
                 }
+
                 if (group.equals("hitting")) {
-                    System.out.println("[Hitting]");
-                    System.out.printf("  G: %-5s  AVG: %-6s  HR: %-5s  RBI: %-5s  R: %-5s%n",
-                            stat.optInt("gamesPlayed"),
-                            stat.optString("avg", "---"),
-                            stat.optInt("homeRuns"),
-                            stat.optInt("rbi"),
-                            stat.optInt("runs"));
-                    System.out.printf("  OBP: %-6s  SLG: %-6s  OPS: %-6s  SB: %-4s  K: %s%n",
-                            stat.optString("obp", "---"),
-                            stat.optString("slg", "---"),
-                            stat.optString("ops", "---"),
-                            stat.optInt("stolenBases"),
-                            stat.optInt("strikeOuts"));
+                    HittingStats h = new HittingStats();
+                    h.games = stat.optInt("gamesPlayed");
+                    h.avg = stat.optString("avg", "---");
+                    h.obp = stat.optString("obp", "---");
+                    h.slg = stat.optString("slg", "---");
+                    h.ops = stat.optString("ops", "---");
+                    h.homeRuns = stat.optInt("homeRuns");
+                    h.rbi = stat.optInt("rbi");
+                    h.runs = stat.optInt("runs");
+                    h.stolenBases = stat.optInt("stolenBases");
+                    h.strikeOuts = stat.optInt("strikeOuts");
+                    response.hitting = h;
                 } else if (group.equals("pitching")) {
-                    System.out.println("[Pitching]");
-                    System.out.printf("  G: %-5s  W-L: %s-%s  ERA: %-6s  IP: %-7s%n",
-                            stat.optInt("gamesPlayed"),
-                            stat.optInt("wins"),
-                            stat.optInt("losses"),
-                            stat.optString("era", "---"),
-                            stat.optString("inningsPitched", "---"));
-                    System.out.printf("  SO: %-5s  BB: %-5s  WHIP: %s%n",
-                            stat.optInt("strikeOuts"),
-                            stat.optInt("baseOnBalls"),
-                            stat.optString("whip", "---"));
+                    PitchingStats p = new PitchingStats();
+                    p.games = stat.optInt("gamesPlayed");
+                    p.wins = stat.optInt("wins");
+                    p.losses = stat.optInt("losses");
+                    p.era = stat.optString("era", "---");
+                    p.whip = stat.optString("whip", "---");
+                    p.inningsPitched = stat.optString("inningsPitched", "---");
+                    p.strikeOuts = stat.optInt("strikeOuts");
+                    p.walks = stat.optInt("baseOnBalls");
+                    response.pitching = p;
                 }
             }
 
-            if (!foundAny) {
-                System.out.println("No stats found for the " + year + " season.");
+            if (response.hitting == null && response.pitching == null) {
+                response.error = "No stats found for " + response.fullName + " in " + year + ".";
             }
 
         } catch (Exception e) {
-            System.out.println("Error fetching stats: " + e.getMessage());
+            response.error = "Error fetching stats: " + e.getMessage();
         }
+        return response;
     }
 
-    public void lookupLeaders(String startYearStr, String endYearStr, String statType) {
+    public LeadersResponse getLeaders(String startYearStr, String endYearStr, String statType) {
+        LeadersResponse response = new LeadersResponse();
         try {
             int startYear = Integer.parseInt(startYearStr.trim());
             int endYear = Integer.parseInt(endYearStr.trim());
@@ -148,12 +140,12 @@ public class PlayerService {
             boolean isEra = statType.equalsIgnoreCase("ERA");
             String category = isEra ? "era" : "battingAverage";
             String group = isEra ? "pitching" : "hitting";
-            String statLabel = isEra ? "ERA" : "AVG";
-            String title = isEra ? "ERA Leaders (lowest)" : "Batting Average Leaders";
+            response.statLabel = isEra ? "ERA" : "AVG";
+            response.title = isEra ? "ERA Leaders (Lowest)" : "Batting Average Leaders";
+            response.yearRange = startYear == endYear ? String.valueOf(startYear) : startYear + "-" + endYear;
 
-            // Collect top entries per year: map of "Player|Year" -> {value, player, team, year}
-            java.util.List<double[]> values = new java.util.ArrayList<>();
-            java.util.List<String[]> entries = new java.util.ArrayList<>();
+            List<double[]> values = new ArrayList<>();
+            List<LeaderEntry> entries = new ArrayList<>();
 
             for (int year = startYear; year <= endYear; year++) {
                 String url = "https://statsapi.mlb.com/api/v1/stats/leaders"
@@ -169,54 +161,53 @@ public class PlayerService {
 
                 for (int i = 0; i < leaders.length(); i++) {
                     JSONObject leader = leaders.getJSONObject(i);
-                    String playerName = leader.getJSONObject("person").getString("fullName");
-                    String team = leader.optJSONObject("team") != null
-                            ? leader.getJSONObject("team").getString("name") : "---";
                     String val = leader.getString("value");
                     try {
                         double numeric = Double.parseDouble(val);
+                        LeaderEntry entry = new LeaderEntry();
+                        entry.playerName = leader.getJSONObject("person").getString("fullName");
+                        entry.team = leader.optJSONObject("team") != null
+                                ? leader.getJSONObject("team").getString("name") : "---";
+                        entry.value = val;
+                        entry.season = String.valueOf(year);
                         values.add(new double[]{numeric});
-                        entries.add(new String[]{playerName, team, val, String.valueOf(year)});
+                        entries.add(entry);
                     } catch (NumberFormatException ignored) {}
                 }
             }
 
             if (entries.isEmpty()) {
-                System.out.println("No leaders found for " + startYear + "–" + endYear + ".");
-                return;
+                response.error = "No leaders found for " + response.yearRange + ".";
+                return response;
             }
 
-            // Sort: ERA ascending (lowest), AVG descending (highest)
-            java.util.List<Integer> indices = new java.util.ArrayList<>();
+            List<Integer> indices = new ArrayList<>();
             for (int i = 0; i < entries.size(); i++) indices.add(i);
             indices.sort((a, b) -> isEra
                     ? Double.compare(values.get(a)[0], values.get(b)[0])
                     : Double.compare(values.get(b)[0], values.get(a)[0]));
 
-            String yearRange = startYear == endYear ? String.valueOf(startYear) : startYear + "–" + endYear;
-            System.out.println("\n--- " + title + " | " + yearRange + " ---");
-            System.out.printf("  %-4s %-22s %-25s %-6s %s%n", "Rank", "Player", "Team", statLabel, "Season");
-            System.out.println("  " + "-".repeat(66));
-
-            int shown = 0;
-            for (int i = 0; i < indices.size() && shown < 5; i++, shown++) {
-                String[] e = entries.get(indices.get(i));
-                System.out.printf("  %-4d %-22s %-25s %-6s %s%n", shown + 1, e[0], e[1], e[2], e[3]);
+            List<LeaderEntry> top = new ArrayList<>();
+            for (int i = 0; i < Math.min(5, indices.size()); i++) {
+                LeaderEntry e = entries.get(indices.get(i));
+                e.rank = i + 1;
+                top.add(e);
             }
+            response.leaders = top;
 
         } catch (NumberFormatException e) {
-            System.out.println("Invalid year format. Please enter a 4-digit year.");
+            response.error = "Invalid year format.";
         } catch (Exception e) {
-            System.out.println("Error fetching leaders: " + e.getMessage());
+            response.error = "Error fetching leaders: " + e.getMessage();
         }
+        return response;
     }
 
     private String getTeamForYear(int playerId, String year) {
         try {
             String url = "https://statsapi.mlb.com/api/v1/people/" + playerId
                     + "/stats?stats=season&group=hitting,pitching&season=" + year;
-            JSONObject json = new JSONObject(get(url));
-            JSONArray stats = json.optJSONArray("stats");
+            JSONArray stats = new JSONObject(get(url)).optJSONArray("stats");
             if (stats != null) {
                 for (int i = 0; i < stats.length(); i++) {
                     JSONArray splits = stats.getJSONObject(i).optJSONArray("splits");
