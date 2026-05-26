@@ -38,6 +38,24 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <goals><goal>exec</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-jar</argument>
+                        <argument>target/mlb-stat-engine-1.0-SNAPSHOT.jar</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
