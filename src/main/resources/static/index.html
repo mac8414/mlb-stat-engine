@@ -600,27 +600,27 @@
     .matchup .name  { color: #c0e080; font-family: 'Oswald', sans-serif; font-size: 0.85rem; }
     .matchup .pitch-count { color: #8ab84a; font-size: 0.7rem; }
 
-    .boxscore-btn {
-      background: #0e2a0e;
-      border: 1px solid #3a6a3a;
-      color: #5a8a3a;
+    .boxscore-btn, .lineup-btn {
+      background: transparent;
+      border: none;
+      color: #4a6a4a;
       font-family: 'Oswald', sans-serif;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       letter-spacing: 2px;
-      padding: 3px 10px;
+      padding: 0 4px;
       cursor: pointer;
       text-transform: uppercase;
-      transition: border-color 0.2s, color 0.2s;
+      transition: color 0.2s;
     }
-    .boxscore-btn:hover { border-color: #8ab84a; color: #c0e080; }
+    .boxscore-btn:hover, .lineup-btn:hover { color: #c0e080; }
+    .lineup-panel-cell {
+      padding: 0 16px 16px;
+      border-bottom: 2px solid #2a5a2a;
+      box-shadow: 0 4px 0 #0a1a0a;
+    }
     .boxscore-panel {
-      display: none;
-      margin-top: 8px;
-      border-top: 1px solid #1a4a1a;
-      padding-top: 8px;
       width: 100%;
     }
-    .boxscore-panel.open { display: block; }
     .boxscore-side-label {
       font-family: 'Oswald', sans-serif;
       font-size: 0.65rem;
@@ -651,7 +651,11 @@
       border-bottom: 1px solid #122a12;
     }
     .boxscore-table td:first-child { text-align: left; color: #a8c870; }
-    .boxscore-table tr.current-pitcher td { color: #c0e080; }
+    .boxscore-table tr.current-pitcher td { color: #c0e080; font-weight: bold; }
+    .boxscore-table tr.at-bat td { background: rgba(0,180,60,0.10); color: #c0e080; }
+    .boxscore-table tr.at-bat td:first-child { color: #c0e080; }
+    .boxscore-table tr.on-deck td { background: rgba(0,100,30,0.06); color: #8ab84a; }
+    .boxscore-table tr.on-deck td:first-child { color: #8ab84a; }
     .boxscore-tabs {
       display: flex;
       gap: 8px;
@@ -1172,7 +1176,7 @@
         } catch(e) {}
       }
       const statusLabel = g.isLive
-        ? `<span class="live-dot"></span>${g.currentInning || 'LIVE'}`
+        ? `${g.currentInning || 'LIVE'}`
         : g.isFinal ? `FINAL${extraLabel}` : statusDisplay;
 
       rows += `
@@ -1216,15 +1220,21 @@
                 ${g.batterName ? `<div><span class="label">AT BAT</span> <span class="name">${g.batterName}</span></div>` : ''}
                 ${g.pitcherName ? `<div><span class="label">PITCHING</span> <span class="name">${g.pitcherName}</span></div>` : ''}
               </div>` : ''}
-              <div>
-                <button class="boxscore-btn" onclick="toggleBoxScore(this, ${g.gamePk}, '${g.awayAbbrev}', '${g.homeAbbrev}')">Box Score ▾</button>
-              </div>
             </div>
-            <div class="boxscore-panel" id="bs-${g.gamePk}"></div>
           </td>
         </tr>` : ''}
         <tr class="game-status-row">
-          <td colspan="${maxInnings + 4}" class="${statusClass}">&nbsp;&nbsp;${statusLabel}</td>
+          <td colspan="${maxInnings + 4}" class="${statusClass}">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span>${g.isLive ? `<span class="live-dot"></span>` : ''}${statusLabel}</span>
+              ${g.gamePk ? `<button class="lineup-btn" onclick="toggleLineup(this,${g.gamePk},'${g.awayAbbrev}','${g.homeAbbrev}')">LINEUP ▾</button>` : ''}
+            </div>
+          </td>
+        </tr>
+        <tr class="lineup-panel-row" id="lp-row-${g.gamePk}" style="display:none">
+          <td colspan="${maxInnings + 4}" class="lineup-panel-cell">
+            <div class="boxscore-panel open" id="bs-${g.gamePk}"></div>
+          </td>
         </tr>`;
 
       nextPrevMap[key] = {
@@ -1382,25 +1392,30 @@
       </div>`;
   }
 
-  async function toggleBoxScore(btn, gamePk, awayAbbrev, homeAbbrev) {
+  async function toggleLineup(btn, gamePk, awayAbbrev, homeAbbrev) {
+    const row = document.getElementById('lp-row-' + gamePk);
     const panel = document.getElementById('bs-' + gamePk);
-    if (panel.classList.contains('open')) {
-      panel.classList.remove('open');
-      btn.textContent = 'Box Score ▾';
+    if (row.style.display !== 'none') {
+      row.style.display = 'none';
+      btn.textContent = 'LINEUP ▾';
       return;
     }
-    btn.textContent = 'Loading…';
+    btn.textContent = 'LOADING…';
     try {
       const d = await fetch(`/api/game/${gamePk}`).then(r => r.json());
-      panel.innerHTML = renderBoxScore(d, awayAbbrev, homeAbbrev);
-      panel.classList.add('open');
-      btn.textContent = 'Box Score ▴';
-      // activate first tab
+      panel.innerHTML = renderLineup(d, awayAbbrev, homeAbbrev);
+      row.style.display = '';
+      btn.textContent = 'LINEUP ▴';
       const firstTab = panel.querySelector('.bs-tab');
-      if (firstTab) switchBsTab(firstTab, gamePk + '-away-bat');
+      if (firstTab) switchBsTab(firstTab, firstTab.dataset.target);
     } catch(e) {
-      btn.textContent = 'Box Score ▾';
+      btn.textContent = 'LINEUP ▾';
     }
+  }
+
+  // Legacy alias kept for safety
+  async function toggleBoxScore(btn, gamePk, awayAbbrev, homeAbbrev) {
+    return toggleLineup(btn, gamePk, awayAbbrev, homeAbbrev);
   }
 
   function switchBsTab(el, target) {
@@ -1412,52 +1427,65 @@
     });
   }
 
-  function renderBoxScore(d, awayAbbrev, homeAbbrev) {
-    const batCols = ['AB','H','HR','RBI','BB','K','R'];
-    const pitCols = ['IP','H','ER','BB','K','P'];
+  function renderLineup(d, awayAbbrev, homeAbbrev) {
+    const id = `g${Math.random().toString(36).slice(2,7)}`;
+
+    function batRow(b) {
+      const rowClass = b.isCurrentBatter ? 'at-bat' : b.isOnDeck ? 'on-deck' : '';
+      const indicator = b.isCurrentBatter ? ' ◀ AT BAT' : b.isOnDeck ? ' ON DECK' : '';
+      const slot = b.battingOrder > 0 ? Math.floor(b.battingOrder / 100) : '';
+      return `<tr class="${rowClass}">
+        <td>${slot}</td>
+        <td>${b.position}</td>
+        <td>${b.name}${indicator ? `<span style="font-size:0.6rem;letter-spacing:2px;margin-left:6px;opacity:0.75">${indicator}</span>` : ''}</td>
+        <td>${b.ab}</td><td>${b.h}</td><td>${b.hr}</td>
+        <td>${b.rbi}</td><td>${b.bb}</td><td>${b.k}</td><td>${b.r}</td>
+      </tr>`;
+    }
 
     function batTable(batters) {
-      if (!batters || !batters.length) return '<p style="color:#4a6a4a;font-size:0.7rem">No data</p>';
+      if (!batters || !batters.length) return '<p style="color:#4a6a4a;font-size:0.7rem;padding:8px">No data</p>';
       return `<table class="boxscore-table">
         <thead><tr>
-          <th>BATTER</th><th>POS</th>${batCols.map(c=>`<th>${c}</th>`).join('')}
+          <th>#</th><th>POS</th><th style="text-align:left">BATTER</th>
+          <th>AB</th><th>H</th><th>HR</th><th>RBI</th><th>BB</th><th>K</th><th>R</th>
         </tr></thead>
-        <tbody>${batters.map(b=>`<tr>
-          <td>${b.name}</td><td>${b.position}</td>
-          <td>${b.ab}</td><td>${b.h}</td><td>${b.hr}</td>
-          <td>${b.rbi}</td><td>${b.bb}</td><td>${b.k}</td><td>${b.r}</td>
-        </tr>`).join('')}</tbody>
+        <tbody>${batters.map(batRow).join('')}</tbody>
       </table>`;
     }
 
     function pitTable(pitchers) {
-      if (!pitchers || !pitchers.length) return '<p style="color:#4a6a4a;font-size:0.7rem">No data</p>';
+      if (!pitchers || !pitchers.length) return '<p style="color:#4a6a4a;font-size:0.7rem;padding:8px">No data</p>';
       return `<table class="boxscore-table">
         <thead><tr>
-          <th>PITCHER</th>${pitCols.map(c=>`<th>${c}</th>`).join('')}
+          <th style="text-align:left">PITCHER</th>
+          <th>IP</th><th>H</th><th>ER</th><th>BB</th><th>K</th><th>P</th>
         </tr></thead>
         <tbody>${pitchers.map(p=>`<tr${p.isCurrent?' class="current-pitcher"':''}>
-          <td>${p.name}${p.isCurrent?' ●':''}</td>
+          <td>${p.name}${p.isCurrent ? ' ● NOW' : ''}</td>
           <td>${p.ip}</td><td>${p.h}</td><td>${p.er}</td>
           <td>${p.bb}</td><td>${p.k}</td><td>${p.pitches}</td>
         </tr>`).join('')}</tbody>
       </table>`;
     }
 
-    const id = d.awayName; // unique enough per game render
+    const tabs = [
+      { label: `${awayAbbrev} LINEUP`, target: `${id}-ab`, content: batTable(d.awayBatters) },
+      { label: `${homeAbbrev} LINEUP`, target: `${id}-hb`, content: batTable(d.homeBatters) },
+      { label: `${awayAbbrev} PITCHING`, target: `${id}-ap`, content: pitTable(d.awayPitchers) },
+      { label: `${homeAbbrev} PITCHING`, target: `${id}-hp`, content: pitTable(d.homePitchers) },
+    ];
+
     return `
       <div class="boxscore-tabs">
-        <span class="bs-tab" onclick="switchBsTab(this,'${id}-ab')">${awayAbbrev} BAT</span>
-        <span class="bs-tab" onclick="switchBsTab(this,'${id}-hb')">${homeAbbrev} BAT</span>
-        <span class="bs-tab" onclick="switchBsTab(this,'${id}-ap')">${awayAbbrev} PITCH</span>
-        <span class="bs-tab" onclick="switchBsTab(this,'${id}-hp')">${homeAbbrev} PITCH</span>
+        ${tabs.map((t,i)=>`<span class="bs-tab${i===0?' active':''}" data-target="${t.target}" onclick="switchBsTab(this,'${t.target}')">${t.label}</span>`).join('')}
       </div>
-      <div id="${id}-ab" class="bs-section">${batTable(d.awayBatters)}</div>
-      <div id="${id}-hb" class="bs-section">${batTable(d.homeBatters)}</div>
-      <div id="${id}-ap" class="bs-section">${pitTable(d.awayPitchers)}</div>
-      <div id="${id}-hp" class="bs-section">${pitTable(d.homePitchers)}</div>
+      ${tabs.map((t,i)=>`<div id="${t.target}" class="bs-section" style="display:${i===0?'block':'none'}">${t.content}</div>`).join('')}
     `;
   }
+
+  // Legacy alias
+  function renderBoxScore(d, away, home) { return renderLineup(d, away, home); }
 </script>
 </body>
 </html>

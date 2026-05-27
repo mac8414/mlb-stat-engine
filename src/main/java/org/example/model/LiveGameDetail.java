@@ -22,6 +22,9 @@ public class LiveGameDetail {
         public int bb;
         public int k;
         public int r;
+        public boolean isCurrentBatter;
+        public boolean isOnDeck;
+        public int battingOrder; // 100, 200, ... 900
     }
 
     public static class PitcherLine {

@@ -634,15 +634,24 @@ public class PlayerService {
             JSONObject box = new JSONObject(get(url));
             JSONObject teams = box.getJSONObject("teams");
 
-            // Determine current pitcher from linescore
+            // Determine current batter, on-deck batter, and pitcher from linescore
+            int currentBatterId = -1;
+            int onDeckBatterId  = -1;
             String currentPitcherName = "";
             try {
                 String lsUrl = "https://statsapi.mlb.com/api/v1/game/" + gamePk + "/linescore";
                 JSONObject ls = new JSONObject(get(lsUrl));
+                JSONObject offense = ls.optJSONObject("offense");
                 JSONObject defense = ls.optJSONObject("defense");
+                if (offense != null) {
+                    JSONObject batter = offense.optJSONObject("batter");
+                    if (batter != null) currentBatterId = batter.optInt("id", -1);
+                    JSONObject onDeck = offense.optJSONObject("onDeck");
+                    if (onDeck != null) onDeckBatterId = onDeck.optInt("id", -1);
+                }
                 if (defense != null) {
-                    JSONObject p = defense.optJSONObject("pitcher");
-                    if (p != null) currentPitcherName = p.optString("fullName", "");
+                    JSONObject pitcher = defense.optJSONObject("pitcher");
+                    if (pitcher != null) currentPitcherName = pitcher.optString("fullName", "");
                 }
             } catch (Exception ignored) {}
 
@@ -653,22 +662,35 @@ public class PlayerService {
                 if (side.equals("away")) detail.awayName = teamName;
                 else detail.homeName = teamName;
 
-                // Batting order
+                // Batting order — collect all batters with a battingOrder field, sorted by it
+                List<LiveGameDetail.BatterLine> sideList = new ArrayList<>();
                 JSONArray batters = team.optJSONArray("batters");
                 if (batters != null) {
                     for (int i = 0; i < batters.length(); i++) {
-                        JSONObject p = players.optJSONObject("ID" + batters.getInt(i));
+                        int pid = batters.getInt(i);
+                        JSONObject p = players.optJSONObject("ID" + pid);
                         if (p == null) continue;
-                        JSONObject bs = p.optJSONObject("stats");
-                        if (bs == null) continue;
-                        JSONObject bat = bs.optJSONObject("batting");
+                        JSONObject stats = p.optJSONObject("stats");
+                        if (stats == null) continue;
+                        JSONObject bat = stats.optJSONObject("batting");
                         if (bat == null) continue;
-                        // Skip pitchers in the batting order unless they have at-bats
-                        String pos = p.optJSONObject("position") != null
-                                ? p.getJSONObject("position").optString("abbreviation", "") : "";
+                        int battingOrder = p.optInt("battingOrder", 0);
+                        if (battingOrder == 0) continue; // not in lineup
+
+                        String pos = "";
+                        JSONArray allPos = p.optJSONArray("allPositions");
+                        if (allPos != null && allPos.length() > 0) {
+                            pos = allPos.getJSONObject(0).optString("abbreviation", "");
+                        } else if (p.optJSONObject("position") != null) {
+                            pos = p.getJSONObject("position").optString("abbreviation", "");
+                        }
+
                         LiveGameDetail.BatterLine bl = new LiveGameDetail.BatterLine();
-                        bl.name  = p.getJSONObject("person").optString("fullName", "");
-                        bl.position = pos;
+                        bl.name           = p.getJSONObject("person").optString("fullName", "");
+                        bl.position       = pos;
+                        bl.battingOrder   = battingOrder;
+                        bl.isCurrentBatter = (pid == currentBatterId);
+                        bl.isOnDeck       = (pid == onDeckBatterId);
                         bl.ab  = bat.optInt("atBats", 0);
                         bl.h   = bat.optInt("hits", 0);
                         bl.hr  = bat.optInt("homeRuns", 0);
@@ -676,10 +698,13 @@ public class PlayerService {
                         bl.bb  = bat.optInt("baseOnBalls", 0);
                         bl.k   = bat.optInt("strikeOuts", 0);
                         bl.r   = bat.optInt("runs", 0);
-                        if (side.equals("away")) detail.awayBatters.add(bl);
-                        else detail.homeBatters.add(bl);
+                        sideList.add(bl);
                     }
                 }
+                // Sort by battingOrder (100, 200, ...) then substitutes after (1000+)
+                sideList.sort((a, b) -> Integer.compare(a.battingOrder, b.battingOrder));
+                if (side.equals("away")) detail.awayBatters = sideList;
+                else detail.homeBatters = sideList;
 
                 // Pitchers in order used
                 JSONArray pitchers = team.optJSONArray("pitchers");
@@ -687,9 +712,9 @@ public class PlayerService {
                     for (int i = 0; i < pitchers.length(); i++) {
                         JSONObject p = players.optJSONObject("ID" + pitchers.getInt(i));
                         if (p == null) continue;
-                        JSONObject bs = p.optJSONObject("stats");
-                        if (bs == null) continue;
-                        JSONObject pit = bs.optJSONObject("pitching");
+                        JSONObject stats = p.optJSONObject("stats");
+                        if (stats == null) continue;
+                        JSONObject pit = stats.optJSONObject("pitching");
                         if (pit == null) continue;
                         LiveGameDetail.PitcherLine pl = new LiveGameDetail.PitcherLine();
                         pl.name    = p.getJSONObject("person").optString("fullName", "");
@@ -711,6 +736,3 @@ public class PlayerService {
         return detail;
     }
 }
-
-
-
