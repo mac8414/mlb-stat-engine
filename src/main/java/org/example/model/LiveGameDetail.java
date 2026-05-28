@@ -22,9 +22,10 @@ public class LiveGameDetail {
         public int bb;
         public int k;
         public int r;
+        public String avg;       // season AVG
         public boolean isCurrentBatter;
         public boolean isOnDeck;
-        public int battingOrder; // 100, 200, ... 900
+        public int battingOrder;
     }
 
     public static class PitcherLine {
@@ -35,6 +36,7 @@ public class LiveGameDetail {
         public int bb;
         public int k;
         public int pitches;
+        public String era;       // season ERA
         public boolean isCurrent;
     }
 }

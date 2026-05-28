@@ -10,7 +10,7 @@
 
     body {
       font-family: 'Share Tech Mono', monospace;
-      background: #1a3a1a;
+      background: #0d2616;
       color: #f0f0e0;
       min-height: 100vh;
       background-image: repeating-linear-gradient(
@@ -21,11 +21,11 @@
 
     /* HEADER */
     header {
-      background: #0e2a0e;
-      border-bottom: 3px solid #3a6a1a;
+      background: #071a0e;
+      border-bottom: 3px solid #16472e;
       padding: 28px 32px 32px;
       text-align: center;
-      box-shadow: 0 4px 0 #1e4e0e, 0 6px 18px rgba(0,0,0,0.6);
+      box-shadow: 0 4px 0 #0b3220, 0 6px 18px rgba(0,0,0,0.6);
     }
     header h1 {
       font-family: 'Oswald', sans-serif;
@@ -39,7 +39,7 @@
     header .subtitle {
       font-size: 0.7rem;
       letter-spacing: 4px;
-      color: #8ab84a;
+      color: #006747;
       margin-top: 4px;
       text-transform: uppercase;
     }
@@ -52,8 +52,8 @@
     .bulb {
       width: 8px; height: 8px;
       border-radius: 50%;
-      background: #8ab84a;
-      box-shadow: 0 0 6px #8ab84a;
+      background: #006747;
+      box-shadow: 0 0 6px #006747;
       animation: flicker 3s infinite;
     }
     .bulb:nth-child(2) { animation-delay: 0.4s; }
@@ -83,20 +83,20 @@
 
     /* PANELS */
     .scoreboard-panel {
-      background: #0e2a0e;
-      border: 2px solid #2a5a2a;
+      background: #071a0e;
+      border: 2px solid #103c28;
       border-radius: 4px;
       margin-bottom: 20px;
       overflow: hidden;
     }
     .panel-label {
-      background: #2a5a2a;
+      background: #103c28;
       padding: 8px 20px;
       font-family: 'Oswald', sans-serif;
       font-size: 0.7rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: #c0e080;
+      color: #52c47c;
     }
     .panel-body { padding: 20px; }
 
@@ -106,26 +106,26 @@
       flex: 1;
       min-width: 120px;
       padding: 10px 14px;
-      background: #162e16;
-      border: 1px solid #3a6a3a;
+      background: #0b2014;
+      border: 1px solid #16472e;
       border-radius: 2px;
       color: #f0f0e0;
       font-family: 'Share Tech Mono', monospace;
       font-size: 0.95rem;
       letter-spacing: 1px;
     }
-    .input-row input::placeholder { color: #4a7a4a; }
+    .input-row input::placeholder { color: #1e5034; }
     .input-row input:focus, .input-row select:focus {
       outline: none;
-      border-color: #8ab84a;
+      border-color: #006747;
       box-shadow: 0 0 8px rgba(138,184,74,0.3);
     }
-    .input-row select option { background: #0e2a0e; }
+    .input-row select option { background: #071a0e; }
     button.search-btn {
       padding: 10px 24px;
-      background: #2a5a2a;
+      background: #103c28;
       color: #f0f0e0;
-      border: 1px solid #5a8a2a;
+      border: 1px solid #245c3c;
       border-radius: 2px;
       font-family: 'Oswald', sans-serif;
       font-size: 0.85rem;
@@ -135,20 +135,20 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-    button.search-btn:hover { background: #3a7a3a; box-shadow: 0 0 10px rgba(138,184,74,0.3); }
+    button.search-btn:hover { background: #1c5438; box-shadow: 0 0 10px rgba(138,184,74,0.3); }
 
     /*  rendered dynamically, hidden until needed */PICKER 
     #picker {
-      background: #0e2a0e;
-      border: 2px solid #2a5a2a;
+      background: #071a0e;
+      border: 2px solid #103c28;
       border-radius: 4px;
       margin-bottom: 20px;
       overflow: hidden;
     }
     #picker-list { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
     .match-btn {
-      background: #162e16;
-      border: 1px solid #2a5a2a;
+      background: #0b2014;
+      border: 1px solid #103c28;
       border-radius: 2px;
       color: #f0f0e0;
       padding: 10px 16px;
@@ -158,21 +158,21 @@
       font-size: 0.9rem;
       transition: border-color 0.2s;
     }
-    .match-btn:hover { border-color: #8ab84a; background: #1e3e1e; }
-    .match-btn .match-team { color: #6a9a3a; font-size: 0.8rem; margin-top: 3px; }
+    .match-btn:hover { border-color: #006747; background: #0d2618; }
+    .match-btn .match-team { color: #2a6844; font-size: 0.8rem; margin-top: 3px; }
 
     /* STATS CARD */
     #stats-card {
-      background: #0e2a0e;
-      border: 2px solid #2a5a2a;
+      background: #071a0e;
+      border: 2px solid #103c28;
       border-radius: 4px;
       overflow: hidden;
     }
 
     /* Player photo panel */
     .player-photo-panel {
-      background: #0e2a0e;
-      border: 2px solid #2a5a2a;
+      background: #071a0e;
+      border: 2px solid #103c28;
       border-radius: 4px;
       overflow: hidden;
       display: flex;
@@ -203,8 +203,8 @@
       .result-with-photo { grid-template-columns: 1fr; }
     }
     .card-header {
-      background: #162e16;
-      border-bottom: 2px solid #2a5a2a;
+      background: #0b2014;
+      border-bottom: 2px solid #103c28;
       padding: 16px 20px;
       display: flex;
       justify-content: space-between;
@@ -221,31 +221,31 @@
       color: #f0f0e0;
       text-shadow: 0 0 12px rgba(138,184,74,0.4);
     }
-    .player-meta { color: #6a9a3a; font-size: 0.8rem; letter-spacing: 2px; margin-top: 4px; }
+    .player-meta { color: #2a6844; font-size: 0.8rem; letter-spacing: 2px; margin-top: 4px; }
     .season-badge {
-      background: #2a5a2a;
-      border: 1px solid #5a8a2a;
+      background: #103c28;
+      border: 1px solid #245c3c;
       border-radius: 2px;
       padding: 6px 14px;
       text-align: center;
     }
-    .season-badge .yr { font-family: 'Oswald', sans-serif; font-size: 1.4rem; color: #c0e080; letter-spacing: 2px; }
-    .season-badge .as-of { font-size: 0.65rem; color: #6a9a3a; letter-spacing: 1px; margin-top: 2px; }
+    .season-badge .yr { font-family: 'Oswald', sans-serif; font-size: 1.4rem; color: #52c47c; letter-spacing: 2px; }
+    .season-badge .as-of { font-size: 0.65rem; color: #2a6844; letter-spacing: 1px; margin-top: 2px; }
 
     /* SCOREBOARD ROWS */
     .stat-section { padding: 16px 20px; }
-    .stat-section + .stat-section { border-top: 1px solid #1e4e1e; }
+    .stat-section + .stat-section { border-top: 1px solid #0d3220; }
     .stat-section-label {
       font-family: 'Oswald', sans-serif;
       font-size: 0.65rem;
       letter-spacing: 4px;
-      color: #8ab84a;
+      color: #006747;
       text-transform: uppercase;
       margin-bottom: 12px;
     }
     .scoreboard-row {
       display: flex;
-      border: 1px solid #2a5a2a;
+      border: 1px solid #103c28;
       border-radius: 2px;
       overflow: hidden;
       margin-bottom: 8px;
@@ -254,8 +254,8 @@
       flex: 1;
       text-align: center;
       padding: 10px 6px;
-      border-right: 1px solid #2a5a2a;
-      background: #162e16;
+      border-right: 1px solid #103c28;
+      background: #0b2014;
     }
     .sb-cell:last-child { border-right: none; }
     .sb-cell .sb-val {
@@ -266,24 +266,34 @@
     }
     .sb-cell .sb-lbl {
       font-size: 0.6rem;
-      color: #5a8a3a;
+      color: #245c3c;
       letter-spacing: 2px;
       text-transform: uppercase;
       margin-top: 4px;
     }
-    .sb-cell.key { background: #1a3a1a; }
-    .sb-cell.key .sb-val { color: #c0e080; text-shadow: 0 0 12px rgba(192,224,128,0.4); }
+    .sb-cell.key { background: #0d2616; }
+    .sb-cell.key .sb-val { color: #52c47c; text-shadow: 0 0 12px rgba(192,224,128,0.4); }
+
+    /* RECENT FORM / SPLITS */
+    .form-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .form-table th { color: #245c3c; letter-spacing: 2px; text-transform: uppercase; padding: 4px 8px; text-align: center; font-weight: 400; border-bottom: 1px solid #103c28; }
+    .form-table td { text-align: center; padding: 6px 8px; color: #d0d0c0; border-bottom: 1px solid #0d2616; }
+    .form-table tr:last-child td { border-bottom: none; }
+    .form-table td:first-child { color: #006747; font-weight: 700; letter-spacing: 1px; text-align: left; }
+    .heat-hot  { color: #7aff7a !important; text-shadow: 0 0 8px rgba(100,255,100,0.5); }
+    .heat-cold { color: #ff7070 !important; text-shadow: 0 0 8px rgba(255,100,100,0.4); }
+    .heat-warm { color: #ffe080 !important; }
 
     /* LEADERS BOARD */
     .leaders-board {
-      background: #0e2a0e;
-      border: 2px solid #2a5a2a;
+      background: #071a0e;
+      border: 2px solid #103c28;
       border-radius: 4px;
       overflow: hidden;
     }
     .leaders-title {
-      background: #162e16;
-      border-bottom: 2px solid #2a5a2a;
+      background: #0b2014;
+      border-bottom: 2px solid #103c28;
       padding: 14px 20px;
       display: flex;
       justify-content: space-between;
@@ -296,48 +306,48 @@
       text-transform: uppercase;
       color: #f0f0e0;
     }
-    .leaders-title .lt-range { color: #6a9a3a; font-size: 0.8rem; letter-spacing: 2px; }
+    .leaders-title .lt-range { color: #2a6844; font-size: 0.8rem; letter-spacing: 2px; }
     .leaders-header {
       display: grid;
       grid-template-columns: 32px 1fr 60px 52px;
       padding: 8px 16px;
-      background: #1a4a1a;
-      border-bottom: 1px solid #2a5a2a;
+      background: #0b2e1c;
+      border-bottom: 1px solid #103c28;
       font-size: 0.62rem;
       letter-spacing: 3px;
-      color: #5a8a3a;
+      color: #245c3c;
       text-transform: uppercase;
     }
     .leader-row {
       display: grid;
       grid-template-columns: 32px 1fr 60px 52px;
       padding: 12px 16px;
-      border-bottom: 1px solid #162e16;
+      border-bottom: 1px solid #0b2014;
       align-items: center;
       transition: background 0.15s;
     }
     .leader-row:last-child { border-bottom: none; }
-    .leader-row:hover { background: #162e16; }
-    .leader-rank { font-family: 'Oswald', sans-serif; font-size: 1.1rem; color: #8ab84a; }
+    .leader-row:hover { background: #0b2014; }
+    .leader-rank { font-family: 'Oswald', sans-serif; font-size: 1.1rem; color: #006747; }
     .leader-info .leader-name {
       font-size: 0.85rem;
       color: #f0f0e0;
       cursor: pointer;
       text-decoration: underline;
-      text-decoration-color: #3a6a3a;
+      text-decoration-color: #16472e;
       text-underline-offset: 3px;
       transition: color 0.15s;
     }
-    .leader-info .leader-name:hover { color: #c0e080; text-decoration-color: #8ab84a; }
-    .leader-info .leader-team { font-size: 0.72rem; color: #5a8a3a; margin-top: 2px; }
+    .leader-info .leader-name:hover { color: #52c47c; text-decoration-color: #006747; }
+    .leader-info .leader-team { font-size: 0.72rem; color: #245c3c; margin-top: 2px; }
     .leader-value {
       font-family: 'Oswald', sans-serif;
       font-size: 1.1rem;
-      color: #c0e080;
+      color: #52c47c;
       text-align: right;
       text-shadow: 0 0 8px rgba(192,224,128,0.3);
     }
-    .leader-season { font-size: 0.72rem; color: #5a8a3a; text-align: right; }
+    .leader-season { font-size: 0.72rem; color: #245c3c; text-align: right; }
 
     .error-msg {
       background: #2a1a0e;
@@ -351,7 +361,7 @@
     .spinner {
       text-align: center;
       padding: 32px;
-      color: #4a7a4a;
+      color: #1e5034;
       letter-spacing: 3px;
       font-size: 0.85rem;
     }
@@ -359,8 +369,8 @@
 
     /* TABS */
     .tab-bar {
-      background: #0a1f0a;
-      border-bottom: 2px solid #2a5a2a;
+      background: #04140c;
+      border-bottom: 2px solid #103c28;
       display: flex;
       gap: 0;
       padding: 0 32px;
@@ -370,7 +380,7 @@
       font-size: 0.75rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: #4a7a4a;
+      color: #1e5034;
       background: none;
       border: none;
       border-bottom: 3px solid transparent;
@@ -378,8 +388,8 @@
       cursor: pointer;
       transition: color 0.2s, border-color 0.2s;
     }
-    .tab-btn:hover { color: #c0e080; }
-    .tab-btn.active { color: #c0e080; border-bottom-color: #8ab84a; }
+    .tab-btn:hover { color: #52c47c; }
+    .tab-btn.active { color: #52c47c; border-bottom-color: #006747; }
 
     /* SCOREBOARD VIEW */
     #scoreboard-view { padding: 28px 32px; max-width: 1300px; margin: 0 auto; }
@@ -388,33 +398,68 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 24px;
+      margin-bottom: 14px;
     }
+    .date-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .date-nav-btn {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      background: #071a0e;
+      border: 1px solid #103c28;
+      color: #006747;
+      padding: 6px 14px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.15s;
+    }
+    .date-nav-btn:hover { border-color: #006747; color: #52c47c; }
+    .date-nav-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      color: #52c47c;
+      min-width: 160px;
+      text-align: center;
+    }
+    .date-nav-today {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: #245c3c;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .date-nav-today:hover { color: #006747; }
     .div-btn {
       font-family: 'Oswald', sans-serif;
       font-size: 0.7rem;
       letter-spacing: 3px;
       text-transform: uppercase;
-      background: #0e2a0e;
-      border: 1px solid #2a5a2a;
-      color: #6a9a4a;
+      background: #071a0e;
+      border: 1px solid #103c28;
+      color: #2a6844;
       padding: 8px 16px;
       cursor: pointer;
       border-radius: 2px;
       transition: all 0.2s;
     }
-    .div-btn:hover { border-color: #8ab84a; color: #c0e080; }
-    .div-btn.active { background: #1a4a1a; border-color: #8ab84a; color: #c0e080; }
+    .div-btn:hover { border-color: #006747; color: #52c47c; }
+    .div-btn.active { background: #0b2e1c; border-color: #006747; color: #52c47c; }
 
     .sb-board {
-      background: #0a1f0a;
-      border: 2px solid #2a5a2a;
+      background: #04140c;
+      border: 2px solid #103c28;
       border-radius: 4px;
       overflow: hidden;
     }
     .sb-board-header {
-      background: #162e16;
-      border-bottom: 2px solid #2a5a2a;
+      background: #0b2014;
+      border-bottom: 2px solid #103c28;
       padding: 10px 16px;
       display: flex;
       justify-content: space-between;
@@ -425,19 +470,19 @@
       font-size: 0.7rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: #c0e080;
+      color: #52c47c;
     }
     .sb-last-updated {
       font-size: 0.65rem;
-      color: #4a7a4a;
+      color: #1e5034;
       letter-spacing: 2px;
     }
     .live-dot {
       display: inline-block;
       width: 7px; height: 7px;
       border-radius: 50%;
-      background: #8ab84a;
-      box-shadow: 0 0 6px #8ab84a;
+      background: #006747;
+      box-shadow: 0 0 6px #006747;
       margin-right: 6px;
       animation: flicker 2s infinite;
     }
@@ -452,16 +497,16 @@
       font-family: 'Oswald', sans-serif;
       font-size: 0.65rem;
       letter-spacing: 2px;
-      color: #5a8a3a;
+      color: #245c3c;
       text-align: center;
       padding: 8px 6px 6px;
-      border-bottom: 1px solid #1e4e1e;
-      background: #0e2a0e;
+      border-bottom: 1px solid #0d3220;
+      background: #071a0e;
     }
     .inning-table th.team-col { text-align: left; padding-left: 16px; min-width: 80px; }
-    .inning-table th.rhe { color: #8ab84a; }
+    .inning-table th.rhe { color: #006747; }
 
-    .game-group { border-bottom: 2px solid #1a4a1a; }
+    .game-group { border-bottom: 2px solid #0b2e1c; }
     .game-group:last-child { border-bottom: none; }
     .game-row {
       display: contents;
@@ -471,7 +516,7 @@
       padding: 10px 6px;
       font-size: 0.95rem;
       color: #d0d0c0;
-      border-bottom: 1px solid #122812;
+      border-bottom: 1px solid #061610;
       min-width: 28px;
       overflow: hidden; /* clip the tile during drop */
       position: relative;
@@ -484,7 +529,7 @@
     }
     .tile-blank {
       display: inline-block;
-      color: #2a4a2a;
+      color: #0d3422;
       animation: tile-drop 0.18s cubic-bezier(0.22, 0.61, 0.36, 1) both;
     }
     /* Static tile: already placed, no animation */
@@ -501,8 +546,8 @@
 
     /* Tile styling - looks like a physical number card */
     .tile {
-      background: #1a3a1a;
-      border: 1px solid #2a5a2a;
+      background: #0d2616;
+      border: 1px solid #103c28;
       border-radius: 2px;
       padding: 2px 5px;
       min-width: 20px;
@@ -514,35 +559,35 @@
       font-family: 'Oswald', sans-serif;
       font-size: 0.85rem;
       letter-spacing: 2px;
-      color: #c0e080;
+      color: #52c47c;
       white-space: nowrap;
     }
     .inning-table td.rhe-r {
       font-family: 'Oswald', sans-serif;
       font-size: 1.05rem;
       font-weight: 600;
-      color: #e8f0b0;
+      color: #90d4aa;
       text-shadow: 0 0 8px rgba(200,220,100,0.4);
     }
-    .inning-table td.rhe-h { color: #8ab84a; }
+    .inning-table td.rhe-h { color: #006747; }
     .inning-table td.rhe-e { color: #a06040; }
-    .inning-table td.empty { color: #2a4a2a; }
-    .inning-table td.inn-dash { color: #2a4a2a; font-size: 0.7rem; }
+    .inning-table td.empty { color: #0d3422; }
+    .inning-table td.inn-dash { color: #0d3422; font-size: 0.7rem; }
 
     .game-status-row td {
       padding: 4px 6px 10px;
       font-size: 0.65rem;
       letter-spacing: 2px;
-      border-bottom: 2px solid #1a4a1a;
+      border-bottom: 2px solid #0b2e1c;
     }
-    .status-final { color: #5a8a3a; }
-    .status-live   { color: #c0e080; }
-    .status-sched  { color: #4a6a4a; }
+    .status-final { color: #245c3c; }
+    .status-live   { color: #52c47c; }
+    .status-sched  { color: #1a4830; }
 
     /* Live game count panel */
     .live-state-row td {
       padding: 6px 16px 10px;
-      border-bottom: 2px solid #1a4a1a;
+      border-bottom: 2px solid #0b2e1c;
     }
     .live-state {
       display: flex;
@@ -559,7 +604,7 @@
       font-family: 'Oswald', sans-serif;
       font-size: 0.6rem;
       letter-spacing: 2px;
-      color: #5a8a3a;
+      color: #245c3c;
       text-transform: uppercase;
     }
     .count-dots {
@@ -569,8 +614,8 @@
     .count-dot {
       width: 10px; height: 10px;
       border-radius: 50%;
-      border: 1px solid #3a6a3a;
-      background: #0e2a0e;
+      border: 1px solid #16472e;
+      background: #071a0e;
     }
     .count-dot.ball    { background: #2aaa44; box-shadow: 0 0 7px #22cc44; border-color: #22cc44; }
     .count-dot.strike  { background: #cc3333; box-shadow: 0 0 7px #ff4444; border-color: #ff4444; }
@@ -579,31 +624,47 @@
       position: relative;
       width: 34px; height: 34px;
     }
+    .inning-arrows {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+      margin-left: 6px;
+    }
+    .inning-arrow {
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+    }
+    .inning-arrow.top    { border-bottom: 8px solid #52c47c; }
+    .inning-arrow.top.off { border-bottom-color: #0b2e1c; }
+    .inning-arrow.bottom { border-top: 8px solid #52c47c; }
+    .inning-arrow.bottom.off { border-top-color: #0b2e1c; }
     .base {
       position: absolute;
       width: 11px; height: 11px;
-      background: #0e2a0e;
-      border: 1px solid #3a6a3a;
+      background: #071a0e;
+      border: 1px solid #16472e;
       transform: rotate(45deg);
     }
-    .base.on { background: #c0e080; box-shadow: 0 0 6px #8ab84a; border-color: #8ab84a; }
+    .base.on { background: #52c47c; box-shadow: 0 0 6px #006747; border-color: #006747; }
     .base-second { top: 0;    left: 11px; }
     .base-third  { top: 11px; left: 0; }
     .base-first  { top: 11px; left: 22px; }
     .matchup {
       font-size: 0.78rem;
-      color: #6a9a4a;
+      color: #2a6844;
       letter-spacing: 1px;
       line-height: 1.6;
     }
-    .matchup .label { color: #4a6a4a; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; }
-    .matchup .name  { color: #c0e080; font-family: 'Oswald', sans-serif; font-size: 0.85rem; }
-    .matchup .pitch-count { color: #8ab84a; font-size: 0.7rem; }
+    .matchup .label { color: #1a4830; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; }
+    .matchup .name  { color: #52c47c; font-family: 'Oswald', sans-serif; font-size: 0.85rem; }
+    .matchup .pitch-count { color: #006747; font-size: 0.7rem; }
 
     .boxscore-btn, .lineup-btn {
       background: transparent;
       border: none;
-      color: #4a6a4a;
+      color: #1a4830;
       font-family: 'Oswald', sans-serif;
       font-size: 0.6rem;
       letter-spacing: 2px;
@@ -612,10 +673,10 @@
       text-transform: uppercase;
       transition: color 0.2s;
     }
-    .boxscore-btn:hover, .lineup-btn:hover { color: #c0e080; }
+    .boxscore-btn:hover, .lineup-btn:hover { color: #52c47c; }
     .lineup-panel-cell {
       padding: 0 16px 16px;
-      border-bottom: 2px solid #2a5a2a;
+      border-bottom: 2px solid #103c28;
       box-shadow: 0 4px 0 #0a1a0a;
     }
     .boxscore-panel {
@@ -625,7 +686,7 @@
       font-family: 'Oswald', sans-serif;
       font-size: 0.65rem;
       letter-spacing: 3px;
-      color: #5a8a3a;
+      color: #245c3c;
       text-transform: uppercase;
       margin: 8px 0 4px;
     }
@@ -633,29 +694,29 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 0.72rem;
-      color: #6a9a4a;
+      color: #2a6844;
     }
     .boxscore-table th {
       text-align: right;
       font-family: 'Oswald', sans-serif;
       font-size: 0.58rem;
       letter-spacing: 2px;
-      color: #3a6a3a;
+      color: #16472e;
       padding: 2px 6px;
-      border-bottom: 1px solid #1a4a1a;
+      border-bottom: 1px solid #0b2e1c;
     }
     .boxscore-table th:first-child { text-align: left; }
     .boxscore-table td {
       text-align: right;
       padding: 2px 6px;
-      border-bottom: 1px solid #122a12;
+      border-bottom: 1px solid #071a10;
     }
-    .boxscore-table td:first-child { text-align: left; color: #a8c870; }
-    .boxscore-table tr.current-pitcher td { color: #c0e080; font-weight: bold; }
-    .boxscore-table tr.at-bat td { background: rgba(0,180,60,0.10); color: #c0e080; }
-    .boxscore-table tr.at-bat td:first-child { color: #c0e080; }
-    .boxscore-table tr.on-deck td { background: rgba(0,100,30,0.06); color: #8ab84a; }
-    .boxscore-table tr.on-deck td:first-child { color: #8ab84a; }
+    .boxscore-table td:first-child { text-align: left; color: #36b070; }
+    .boxscore-table tr.current-pitcher td { color: #52c47c; font-weight: bold; }
+    .boxscore-table tr.at-bat td { background: rgba(0,180,60,0.10); color: #52c47c; }
+    .boxscore-table tr.at-bat td:first-child { color: #52c47c; }
+    .boxscore-table tr.on-deck td { background: rgba(0,100,30,0.06); color: #006747; }
+    .boxscore-table tr.on-deck td:first-child { color: #006747; }
     .boxscore-tabs {
       display: flex;
       gap: 8px;
@@ -667,15 +728,77 @@
       letter-spacing: 2px;
       padding: 2px 8px;
       cursor: pointer;
-      color: #4a6a4a;
+      color: #1a4830;
       border-bottom: 2px solid transparent;
     }
-    .bs-tab.active { color: #c0e080; border-bottom-color: #5a8a3a; }
+    .bs-tab.active { color: #52c47c; border-bottom-color: #245c3c; }
+
+    /* Win probability bar */
+    .wp-bar-wrap {
+      margin: 10px 0 6px;
+    }
+    .wp-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 2px;
+      color: #245c3c;
+      margin-bottom: 4px;
+    }
+    .wp-bar-label .wp-pct { color: #52c47c; }
+    .wp-bar {
+      height: 12px;
+      background: #0b2e1c;
+      border: 1px solid #103c28;
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+    }
+    .wp-bar-away {
+      height: 100%;
+      transition: width 0.6s ease;
+    }
+    .wp-bar-home {
+      height: 100%;
+      flex: 1;
+    }
+
+    /* Play-by-play feed */
+    .play-feed { width: 100%; }
+    .play-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 5px 0;
+      border-bottom: 1px solid #071a10;
+      font-size: 0.72rem;
+      color: #2a6844;
+    }
+    .play-item.scoring { color: #36b070; }
+    .play-inning {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 1px;
+      color: #16472e;
+      min-width: 46px;
+      padding-top: 1px;
+    }
+    .play-item.scoring .play-inning { color: #245c3c; }
+    .play-score {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      color: #1e5034;
+      min-width: 38px;
+      padding-top: 1px;
+    }
+    .play-item.scoring .play-score { color: #52c47c; font-weight: bold; }
+    .play-desc { flex: 1; line-height: 1.4; }
 
     .no-games-msg {
       text-align: center;
       padding: 48px;
-      color: #3a6a3a;
+      color: #16472e;
       font-size: 0.85rem;
       letter-spacing: 3px;
     }
@@ -697,10 +820,10 @@
       font-family: 'Oswald', sans-serif;
       font-size: 0.8rem;
       letter-spacing: 5px;
-      color: #8ab84a;
+      color: #006747;
       text-transform: uppercase;
       padding: 10px 0 6px;
-      border-bottom: 2px solid #2a5a2a;
+      border-bottom: 2px solid #103c28;
       margin-bottom: 4px;
     }
     .standings-table {
@@ -712,11 +835,11 @@
       font-family: 'Oswald', sans-serif;
       font-size: 0.62rem;
       letter-spacing: 2px;
-      color: #5a8a3a;
+      color: #245c3c;
       text-align: right;
       padding: 7px 8px;
-      border-bottom: 1px solid #1e4e1e;
-      background: #0e2a0e;
+      border-bottom: 1px solid #0d3220;
+      background: #071a0e;
     }
     .standings-table th.team-col { text-align: left; padding-left: 12px; }
     .standings-table td {
@@ -724,7 +847,7 @@
       padding: 9px 8px;
       font-size: 0.85rem;
       color: #c8c8b8;
-      border-bottom: 1px solid #122812;
+      border-bottom: 1px solid #061610;
     }
     .standings-table td.team-col {
       text-align: left;
@@ -732,19 +855,138 @@
       font-family: 'Oswald', sans-serif;
       font-size: 0.8rem;
       letter-spacing: 1px;
-      color: #c0e080;
+      color: #52c47c;
       white-space: nowrap;
     }
-    .standings-table td.team-col.div-leader { color: #e8f0b0; }
-    .standings-table td.wl { color: #e8f0b0; }
-    .standings-table td.pct { color: #8ab84a; }
-    .standings-table td.gb  { color: #6a9a6a; }
-    .standings-table td.wc-plus { color: #c0e080; }
-    .standings-table td.wc-behind { color: #6a7a6a; }
-    .standings-table td.streak-w { color: #8ab84a; }
+    .standings-table td.team-col.div-leader { color: #90d4aa; }
+    .standings-table td.wl { color: #90d4aa; }
+    .standings-table td.pct { color: #006747; }
+    .standings-table td.gb  { color: #2a6844; }
+    .standings-table td.wc-plus { color: #52c47c; }
+    .standings-table td.wc-behind { color: #225a3a; }
+    .standings-table td.streak-w { color: #006747; }
     .standings-table td.streak-l { color: #a06040; }
     .standings-table tr.first-row td { border-top: none; }
-    .standings-divider td { border-bottom: 2px solid #1a4a1a !important; padding: 0 !important; height: 2px; }
+    .standings-divider td { border-bottom: 2px solid #0b2e1c !important; padding: 0 !important; height: 2px; }
+
+    /* ── SCHEDULE TAB ── */
+    .schedule-record {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 4px;
+      color: #52c47c;
+      margin-bottom: 16px;
+    }
+    .schedule-record span { color: #245c3c; font-size: 0.7rem; letter-spacing: 3px; }
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .schedule-table th {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      color: #245c3c;
+      text-align: left;
+      padding: 7px 10px;
+      border-bottom: 1px solid #0d3220;
+      background: #071a0e;
+    }
+    .schedule-table td {
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      color: #006747;
+      border-bottom: 1px solid #061610;
+    }
+    .schedule-table tr.today-row td { background: rgba(0,60,0,0.4); }
+    .result-w { color: #006747; font-family: 'Oswald', sans-serif; font-weight: bold; }
+    .result-l { color: #a06040; font-family: 'Oswald', sans-serif; }
+    .result-live { color: #52c47c; font-family: 'Oswald', sans-serif; }
+    .result-upcoming { color: #1a4830; }
+    .sched-score { color: #52c47c; }
+    .sched-opp { color: #36b070; }
+    .sched-home { color: #245c3c; font-size: 0.65rem; }
+    .sched-record-col { color: #265e3e; font-size: 0.75rem; }
+    .today-marker {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      color: #52c47c;
+      background: #0b2e1c;
+      padding: 3px 8px;
+    }
+
+    /* ── PLAYOFF TAB ── */
+    .playoff-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .playoff-league-header {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 5px;
+      color: #006747;
+      padding: 10px 0 8px;
+      border-bottom: 2px solid #103c28;
+      margin-bottom: 16px;
+    }
+    .playoff-seed-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #061610;
+      transition: background 0.15s;
+    }
+    .playoff-seed-row:hover { background: rgba(0,40,0,0.4); }
+    .playoff-seed-row.div-leader { border-left: 3px solid #245c3c; }
+    .playoff-seed-row.wc-row    { border-left: 3px solid #2a5a4a; }
+    .playoff-seed-row.wc-divider { border-top: 2px dashed #103c28; margin-top: 4px; }
+    .seed-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.1rem;
+      color: #245c3c;
+      min-width: 22px;
+      text-align: center;
+    }
+    .seed-logo img { width: 32px; height: 32px; }
+    .seed-info { flex: 1; }
+    .seed-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      color: #52c47c;
+    }
+    .seed-div  { font-size: 0.6rem; letter-spacing: 2px; color: #245c3c; text-transform: uppercase; }
+    .seed-wl   {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      color: #36b070;
+      min-width: 70px;
+      text-align: right;
+    }
+    .seed-gb   { font-size: 0.7rem; color: #2a6844; min-width: 50px; text-align: right; }
+    .seed-clinch {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+      background: #0b2e1c;
+      color: #006747;
+      padding: 1px 5px;
+      border: 1px solid #16472e;
+      min-width: 18px;
+      text-align: center;
+    }
+    .eliminated .seed-name, .eliminated .seed-wl { color: #1e5034; }
+    .playoff-wc-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      color: #1e5034;
+      padding: 6px 12px 2px;
+    }
   </style>
 </head>
 <body>
@@ -763,6 +1005,8 @@
   <button class="tab-btn active" id="tab-stats" onclick="switchTab('stats')">&#9644; Stats</button>
   <button class="tab-btn" id="tab-scoreboard" onclick="switchTab('scoreboard')">&#9644; Scoreboard</button>
   <button class="tab-btn" id="tab-standings" onclick="switchTab('standings')">&#9644; Standings</button>
+  <button class="tab-btn" id="tab-schedule" onclick="switchTab('schedule')">&#9644; Schedule</button>
+  <button class="tab-btn" id="tab-playoff" onclick="switchTab('playoff')">&#9644; Playoff Picture</button>
 </nav>
 
 <div id="stats-view">
@@ -789,7 +1033,11 @@
       <div class="panel-label">World Series Champion</div>
       <div class="panel-body">
         <div class="input-row">
-          <input id="ws-year" type="text" placeholder="Year (e.g. 2004)" maxlength="4"/>
+          <input id="ws-query" type="text" placeholder="Year (e.g. 2004)" maxlength="40"/>
+          <select id="ws-mode" onchange="wsToggleMode()" style="max-width:100px">
+            <option value="year">By Year</option>
+            <option value="team">By Team</option>
+          </select>
           <button class="search-btn" onclick="searchWorldSeries()">Search</button>
         </div>
       </div>
@@ -830,6 +1078,14 @@
       <button class="div-btn" onclick="selectDivision(this,'NL Central')">NL Central</button>
       <button class="div-btn" onclick="selectDivision(this,'NL West')">NL West</button>
     </div>
+    <div class="date-nav">
+      <button class="date-nav-btn" onclick="shiftScoreDate(-1)">◀</button>
+      <div>
+        <div class="date-nav-label" id="score-date-label">TODAY</div>
+        <div style="text-align:center"><span class="date-nav-today" onclick="goToToday()">GO TO TODAY</span></div>
+      </div>
+      <button class="date-nav-btn" onclick="shiftScoreDate(1)">▶</button>
+    </div>
     <div id="scores-board"></div>
   </div>
 </div>
@@ -837,6 +1093,27 @@
 <div id="standings-view" class="hidden">
   <div style="padding:28px 32px;max-width:1300px;margin:0 auto">
     <div id="standings-board"><div class="spinner">[ LOADING... ]</div></div>
+  </div>
+</div>
+
+<div id="schedule-view" class="hidden">
+  <div style="padding:28px 32px;max-width:1100px;margin:0 auto">
+    <div class="scoreboard-panel" style="margin-bottom:20px">
+      <div class="panel-label">Team Schedule</div>
+      <div class="panel-body">
+        <div class="input-row">
+          <select id="schedule-team" class="search-input" style="max-width:260px"></select>
+          <button class="search-btn" onclick="loadSchedule()">Load</button>
+        </div>
+      </div>
+    </div>
+    <div id="schedule-board"></div>
+  </div>
+</div>
+
+<div id="playoff-view" class="hidden">
+  <div style="padding:28px 32px;max-width:1100px;margin:0 auto">
+    <div id="playoff-board"><div class="spinner">[ LOADING... ]</div></div>
   </div>
 </div>
 
@@ -946,7 +1223,7 @@
 
     if (d.careerBestAvg || d.careerBestEra) {
       statsHtml += `
-        <div class="stat-section" style="border-top:1px solid #1e4e1e">
+        <div class="stat-section" style="border-top:1px solid #0d3220">
           <div class="stat-section-label">&#9733; Career Best</div>
           <div class="scoreboard-row">
             ${d.careerBestAvg ? cell(d.careerBestAvg, 'AVG', true) + cell(d.careerBestAvgYear, 'Season', true) : ''}
@@ -956,6 +1233,72 @@
     }
 
     statsHtml += `</div>`;
+
+    // Recent Form section
+    if (d.recentForm) {
+      const rf = d.recentForm;
+      const isPitcher = !d.hitting;
+      const seasonKey = isPitcher ? parseFloat(d.pitching?.era) : parseFloat(d.hitting?.avg);
+
+      function heatClass(splitVal) {
+        const v = parseFloat(splitVal);
+        if (isNaN(v) || isNaN(seasonKey)) return '';
+        if (isPitcher) {
+          // Lower ERA = hotter
+          if (v < seasonKey - 0.5) return 'heat-hot';
+          if (v > seasonKey + 0.5) return 'heat-cold';
+          return 'heat-warm';
+        } else {
+          // Higher AVG = hotter
+          if (v > seasonKey + 0.020) return 'heat-hot';
+          if (v < seasonKey - 0.020) return 'heat-cold';
+          return 'heat-warm';
+        }
+      }
+
+      function splitRow(label, sl) {
+        if (!sl) return '';
+        if (isPitcher) {
+          const cls = heatClass(sl.era);
+          return `<tr>
+            <td>${label}</td>
+            <td class="${cls}">${sl.era}</td>
+            <td>${sl.whip}</td>
+            <td>${sl.inningsPitched}</td>
+            <td>${sl.wins}-${sl.losses}</td>
+            <td>${sl.strikeOuts}</td>
+          </tr>`;
+        } else {
+          const cls = heatClass(sl.avg);
+          return `<tr>
+            <td>${label}</td>
+            <td class="${cls}">${sl.avg}</td>
+            <td>${sl.ops}</td>
+            <td>${sl.homeRuns}</td>
+            <td>${sl.rbi}</td>
+            <td>${sl.strikeOuts}</td>
+          </tr>`;
+        }
+      }
+
+      const headers = isPitcher
+        ? `<tr><th>SPAN</th><th>ERA</th><th>WHIP</th><th>IP</th><th>W-L</th><th>SO</th></tr>`
+        : `<tr><th>SPAN</th><th>AVG</th><th>OPS</th><th>HR</th><th>RBI</th><th>K</th></tr>`;
+
+      statsHtml = statsHtml.replace('</div>', '') + `
+        <div class="stat-section" style="border-top:1px solid #0d3220">
+          <div class="stat-section-label">&#128293; Recent Form</div>
+          <table class="form-table">
+            <thead>${headers}</thead>
+            <tbody>
+              ${splitRow('L7',  rf.l7)}
+              ${splitRow('L14', rf.l14)}
+              ${splitRow('L30', rf.l30)}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+    }
 
     const photoHtml = `
       <div class="player-photo-panel">
@@ -1016,19 +1359,75 @@
 
   // ─── TAB SWITCHING ───────────────────────────────────────────
   function switchTab(tab) {
-    ['stats','scoreboard','standings'].forEach(t => {
+    ['stats','scoreboard','standings','schedule','playoff'].forEach(t => {
       document.getElementById(t + '-view').classList.toggle('hidden', t !== tab);
       document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     });
     if (tab === 'scoreboard' && !scoreboardInterval) startScoreboard();
     if (tab === 'standings') loadStandings();
+    if (tab === 'schedule') initScheduleTeams();
+    if (tab === 'playoff') loadPlayoffPicture();
   }
 
   // ─── SCOREBOARD ──────────────────────────────────────────────
   let currentDivision = 'AL East';
   let scoreboardInterval = null;
+  let currentScoreDate = new Date(); // today by default
   // Map of gameKey -> previous game snapshot for diffing
   let prevGamesMap = {};
+
+  function scoreboardDateStr(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function updateDateLabel() {
+    const todayStr = scoreboardDateStr(new Date());
+    const selStr   = scoreboardDateStr(currentScoreDate);
+    const el = document.getElementById('score-date-label');
+    if (!el) return;
+    if (selStr === todayStr) {
+      el.textContent = 'TODAY';
+    } else {
+      el.textContent = currentScoreDate.toLocaleDateString([], {month:'short', day:'numeric', year:'numeric'}).toUpperCase();
+    }
+  }
+
+  function shiftScoreDate(delta) {
+    const d = new Date(currentScoreDate);
+    d.setDate(d.getDate() + delta);
+    currentScoreDate = d;
+    prevGamesMap = {};
+    updateDateLabel();
+    // Pause auto-refresh on non-today dates
+    const isToday = scoreboardDateStr(currentScoreDate) === scoreboardDateStr(new Date());
+    if (!isToday) {
+      clearInterval(scoreboardInterval);
+      clearInterval(countdownInterval);
+      scoreboardInterval = null;
+      const cdEl = document.getElementById('sb-countdown');
+      if (cdEl) cdEl.textContent = '';
+    } else {
+      if (!scoreboardInterval) {
+        scoreboardInterval = setInterval(loadScores, 30000);
+        startCountdown();
+      }
+    }
+    loadScores();
+  }
+
+  function goToToday() {
+    currentScoreDate = new Date();
+    prevGamesMap = {};
+    updateDateLabel();
+    if (!scoreboardInterval) {
+      scoreboardInterval = setInterval(loadScores, 30000);
+      startCountdown();
+    }
+    loadScores();
+  }
 
   function selectDivision(btn, division) {
     document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
@@ -1039,6 +1438,7 @@
   }
 
   function startScoreboard() {
+    updateDateLabel();
     loadScores();
     scoreboardInterval = setInterval(loadScores, 30000);
     startCountdown();
@@ -1076,7 +1476,7 @@
 
   async function loadScores() {
     const boardEl = document.getElementById('scores-board');
-    const params = new URLSearchParams({ division: currentDivision });
+    const params = new URLSearchParams({ division: currentDivision, date: scoreboardDateStr(currentScoreDate) });
     let games;
     try {
       games = await fetch('/api/scores?' + params).then(r => r.json());
@@ -1095,9 +1495,9 @@
         <div class="sb-board">
           <div class="sb-board-header">
             <span class="sb-board-title">${currentDivision}</span>
-            <span class="sb-last-updated">Updated ${updatedStr} &nbsp;·&nbsp; <span id="sb-countdown">Refresh in 30s</span></span>
+            <span class="sb-last-updated">Updated ${updatedStr} &nbsp;·&nbsp; <span id="sb-countdown"></span></span>
           </div>
-          <div class="no-games-msg">[ NO GAMES SCHEDULED TODAY ]</div>
+          <div class="no-games-msg">[ NO GAMES SCHEDULED ]</div>
         </div>`;
       return;
     }
@@ -1215,6 +1615,10 @@
                 <div class="base base-third${g.runnerOnThird?' on':''}"></div>
                 <div class="base base-first${g.runnerOnFirst?' on':''}"></div>
               </div>
+              <div class="inning-arrows">
+                <div class="inning-arrow top${g.isTopInning?'':' off'}"></div>
+                <div class="inning-arrow bottom${g.isTopInning?' off':''}"></div>
+              </div>
               ${g.batterName || g.pitcherName ? `
               <div class="matchup">
                 ${g.batterName ? `<div><span class="label">AT BAT</span> <span class="name">${g.batterName}</span></div>` : ''}
@@ -1227,7 +1631,10 @@
           <td colspan="${maxInnings + 4}" class="${statusClass}">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <span>${g.isLive ? `<span class="live-dot"></span>` : ''}${statusLabel}</span>
-              ${g.gamePk ? `<button class="lineup-btn" onclick="toggleLineup(this,${g.gamePk},'${g.awayAbbrev}','${g.homeAbbrev}')">LINEUP ▾</button>` : ''}
+              <span style="display:flex;align-items:center;gap:10px">
+                ${g.tvNetwork ? `<span style="font-size:0.65rem;color:#2da868;letter-spacing:1px;opacity:0.85">📺 ${g.tvNetwork}</span>` : ''}
+                ${g.gamePk ? `<button class="lineup-btn" onclick="toggleLineup(this,${g.gamePk},'${g.awayAbbrev}','${g.homeAbbrev}')">LINEUP ▾</button>` : ''}
+              </span>
             </div>
           </td>
         </tr>
@@ -1247,11 +1654,21 @@
 
     prevGamesMap = nextPrevMap;
 
+    // Capture open panels before wiping DOM
+    const openPanels = {};
+    document.querySelectorAll('.lineup-panel-row').forEach(row => {
+      if (row.style.display !== 'none') {
+        const gamePk = row.id.replace('lp-row-', '');
+        const activeTab = row.querySelector('.bs-tab.active');
+        openPanels[gamePk] = activeTab ? activeTab.dataset.target : null;
+      }
+    });
+
     boardEl.innerHTML = `
       <div class="sb-board">
         <div class="sb-board-header">
           <span class="sb-board-title">${hasLive ? '<span class="live-dot"></span>' : ''}${currentDivision}</span>
-          <span class="sb-last-updated">Updated ${updatedStr} &nbsp;·&nbsp; <span id="sb-countdown">Refresh in 30s</span></span>
+          <span class="sb-last-updated">Updated ${updatedStr} &nbsp;·&nbsp; <span id="sb-countdown">${scoreboardDateStr(currentScoreDate) === scoreboardDateStr(new Date()) ? 'Refresh in 30s' : ''}</span></span>
         </div>
         <table class="inning-table">
           <thead>
@@ -1264,55 +1681,297 @@
           <tbody>${rows}</tbody>
         </table>
       </div>`;
+
+    // Silently restore open panels
+    for (const [gamePk, activeTarget] of Object.entries(openPanels)) {
+      const row = document.getElementById('lp-row-' + gamePk);
+      const btn = document.querySelector(`button[onclick*="toggleLineup"][onclick*=",${gamePk},"]`);
+      if (!row) continue;
+      const panel = document.getElementById('bs-' + gamePk);
+      const away = btn ? btn.getAttribute('onclick').match(/'([^']+)','([^']+)'\)/)?.[1] : null;
+      const home = btn ? btn.getAttribute('onclick').match(/'([^']+)','([^']+)'\)/)?.[2] : null;
+      if (!away || !home) continue;
+      // Silently fetch and re-render without touching the button label state mid-refresh
+      (async () => {
+        try {
+          const [d, plays] = await Promise.all([
+            fetch(`/api/game/${gamePk}`).then(r => r.json()),
+            fetch(`/api/game/${gamePk}/plays`).then(r => r.json())
+          ]);
+          panel.innerHTML = renderLineup(d, plays, away, home);
+          row.style.display = '';
+          if (btn) btn.textContent = 'LINEUP ▴';
+          // Restore active tab
+          const target = activeTarget;
+          if (target) {
+            const tab = panel.querySelector(`.bs-tab[data-target="${target}"]`);
+            if (tab) switchBsTab(tab, target);
+          } else {
+            const firstTab = panel.querySelector('.bs-tab');
+            if (firstTab) switchBsTab(firstTab, firstTab.dataset.target);
+          }
+        } catch(e) {}
+      })();
+    }
   }
 
-  document.getElementById('ws-year').addEventListener('keydown', e => { if (e.key === 'Enter') searchWorldSeries(); });
+  document.getElementById('ws-query').addEventListener('keydown', e => { if (e.key === 'Enter') searchWorldSeries(); });
+
+  function wsToggleMode() {
+    const mode = document.getElementById('ws-mode').value;
+    const inp  = document.getElementById('ws-query');
+    inp.placeholder = mode === 'year' ? 'Year (e.g. 2004)' : 'Team name (e.g. Red Sox)';
+    inp.maxLength   = mode === 'year' ? 4 : 40;
+    inp.value = '';
+    document.getElementById('ws-result').innerHTML = '';
+  }
+
+  // Full World Series history 1903–2024
+  // {year, winner, winnerId, loser, loserId, result}
+  const WS_HISTORY = [
+    {year:1903,winner:'Boston Americans',    winnerId:111, loser:'Pittsburgh Pirates',   loserId:134, result:'5-3'},
+    {year:1905,winner:'New York Giants',     winnerId:137, loser:'Philadelphia Athletics',loserId:133, result:'4-1'},
+    {year:1906,winner:'Chicago White Sox',   winnerId:145, loser:'Chicago Cubs',          loserId:112, result:'4-2'},
+    {year:1907,winner:'Chicago Cubs',        winnerId:112, loser:'Detroit Tigers',        loserId:116, result:'4-0'},
+    {year:1908,winner:'Chicago Cubs',        winnerId:112, loser:'Detroit Tigers',        loserId:116, result:'4-1'},
+    {year:1909,winner:'Pittsburgh Pirates',  winnerId:134, loser:'Detroit Tigers',        loserId:116, result:'4-3'},
+    {year:1910,winner:'Philadelphia Athletics',winnerId:133,loser:'Chicago Cubs',         loserId:112, result:'4-1'},
+    {year:1911,winner:'Philadelphia Athletics',winnerId:133,loser:'New York Giants',      loserId:137, result:'4-2'},
+    {year:1912,winner:'Boston Red Sox',      winnerId:111, loser:'New York Giants',       loserId:137, result:'4-3'},
+    {year:1913,winner:'Philadelphia Athletics',winnerId:133,loser:'New York Giants',      loserId:137, result:'4-1'},
+    {year:1914,winner:'Boston Braves',       winnerId:144, loser:'Philadelphia Athletics',loserId:133, result:'4-0'},
+    {year:1915,winner:'Boston Red Sox',      winnerId:111, loser:'Philadelphia Phillies', loserId:143, result:'4-1'},
+    {year:1916,winner:'Boston Red Sox',      winnerId:111, loser:'Brooklyn Robins',       loserId:119, result:'4-1'},
+    {year:1917,winner:'Chicago White Sox',   winnerId:145, loser:'New York Giants',       loserId:137, result:'4-2'},
+    {year:1918,winner:'Boston Red Sox',      winnerId:111, loser:'Chicago Cubs',          loserId:112, result:'4-2'},
+    {year:1919,winner:'Cincinnati Reds',     winnerId:113, loser:'Chicago White Sox',     loserId:145, result:'5-3'},
+    {year:1920,winner:'Cleveland Indians',   winnerId:114, loser:'Brooklyn Robins',       loserId:119, result:'5-2'},
+    {year:1921,winner:'New York Giants',     winnerId:137, loser:'New York Yankees',      loserId:147, result:'5-3'},
+    {year:1922,winner:'New York Giants',     winnerId:137, loser:'New York Yankees',      loserId:147, result:'4-0'},
+    {year:1923,winner:'New York Yankees',    winnerId:147, loser:'New York Giants',       loserId:137, result:'4-2'},
+    {year:1924,winner:'Washington Senators', winnerId:120, loser:'New York Giants',       loserId:137, result:'4-3'},
+    {year:1925,winner:'Pittsburgh Pirates',  winnerId:134, loser:'Washington Senators',   loserId:120, result:'4-3'},
+    {year:1926,winner:'St. Louis Cardinals', winnerId:138, loser:'New York Yankees',      loserId:147, result:'4-3'},
+    {year:1927,winner:'New York Yankees',    winnerId:147, loser:'Pittsburgh Pirates',    loserId:134, result:'4-0'},
+    {year:1928,winner:'New York Yankees',    winnerId:147, loser:'St. Louis Cardinals',   loserId:138, result:'4-0'},
+    {year:1929,winner:'Philadelphia Athletics',winnerId:133,loser:'Chicago Cubs',         loserId:112, result:'4-1'},
+    {year:1930,winner:'Philadelphia Athletics',winnerId:133,loser:'St. Louis Cardinals',  loserId:138, result:'4-2'},
+    {year:1931,winner:'St. Louis Cardinals', winnerId:138, loser:'Philadelphia Athletics',loserId:133, result:'4-3'},
+    {year:1932,winner:'New York Yankees',    winnerId:147, loser:'Chicago Cubs',          loserId:112, result:'4-0'},
+    {year:1933,winner:'New York Giants',     winnerId:137, loser:'Washington Senators',   loserId:120, result:'4-1'},
+    {year:1934,winner:'St. Louis Cardinals', winnerId:138, loser:'Detroit Tigers',        loserId:116, result:'4-3'},
+    {year:1935,winner:'Detroit Tigers',      winnerId:116, loser:'Chicago Cubs',          loserId:112, result:'4-2'},
+    {year:1936,winner:'New York Yankees',    winnerId:147, loser:'New York Giants',       loserId:137, result:'4-2'},
+    {year:1937,winner:'New York Yankees',    winnerId:147, loser:'New York Giants',       loserId:137, result:'4-1'},
+    {year:1938,winner:'New York Yankees',    winnerId:147, loser:'Chicago Cubs',          loserId:112, result:'4-0'},
+    {year:1939,winner:'New York Yankees',    winnerId:147, loser:'Cincinnati Reds',       loserId:113, result:'4-0'},
+    {year:1940,winner:'Cincinnati Reds',     winnerId:113, loser:'Detroit Tigers',        loserId:116, result:'4-3'},
+    {year:1941,winner:'New York Yankees',    winnerId:147, loser:'Brooklyn Dodgers',      loserId:119, result:'4-1'},
+    {year:1942,winner:'St. Louis Cardinals', winnerId:138, loser:'New York Yankees',      loserId:147, result:'4-1'},
+    {year:1943,winner:'New York Yankees',    winnerId:147, loser:'St. Louis Cardinals',   loserId:138, result:'4-1'},
+    {year:1944,winner:'St. Louis Cardinals', winnerId:138, loser:'St. Louis Browns',      loserId:110, result:'4-2'},
+    {year:1945,winner:'Detroit Tigers',      winnerId:116, loser:'Chicago Cubs',          loserId:112, result:'4-3'},
+    {year:1946,winner:'St. Louis Cardinals', winnerId:138, loser:'Boston Red Sox',        loserId:111, result:'4-3'},
+    {year:1947,winner:'New York Yankees',    winnerId:147, loser:'Brooklyn Dodgers',      loserId:119, result:'4-3'},
+    {year:1948,winner:'Cleveland Indians',   winnerId:114, loser:'Boston Braves',         loserId:144, result:'4-2'},
+    {year:1949,winner:'New York Yankees',    winnerId:147, loser:'Brooklyn Dodgers',      loserId:119, result:'4-1'},
+    {year:1950,winner:'New York Yankees',    winnerId:147, loser:'Philadelphia Phillies',  loserId:143, result:'4-0'},
+    {year:1951,winner:'New York Yankees',    winnerId:147, loser:'New York Giants',       loserId:137, result:'4-2'},
+    {year:1952,winner:'New York Yankees',    winnerId:147, loser:'Brooklyn Dodgers',      loserId:119, result:'4-3'},
+    {year:1953,winner:'New York Yankees',    winnerId:147, loser:'Brooklyn Dodgers',      loserId:119, result:'4-2'},
+    {year:1954,winner:'New York Giants',     winnerId:137, loser:'Cleveland Indians',     loserId:114, result:'4-0'},
+    {year:1955,winner:'Brooklyn Dodgers',    winnerId:119, loser:'New York Yankees',      loserId:147, result:'4-3'},
+    {year:1956,winner:'New York Yankees',    winnerId:147, loser:'Brooklyn Dodgers',      loserId:119, result:'4-3'},
+    {year:1957,winner:'Milwaukee Braves',    winnerId:144, loser:'New York Yankees',      loserId:147, result:'4-3'},
+    {year:1958,winner:'New York Yankees',    winnerId:147, loser:'Milwaukee Braves',      loserId:144, result:'4-3'},
+    {year:1959,winner:'Los Angeles Dodgers', winnerId:119, loser:'Chicago White Sox',     loserId:145, result:'4-2'},
+    {year:1960,winner:'Pittsburgh Pirates',  winnerId:134, loser:'New York Yankees',      loserId:147, result:'4-3'},
+    {year:1961,winner:'New York Yankees',    winnerId:147, loser:'Cincinnati Reds',       loserId:113, result:'4-1'},
+    {year:1962,winner:'New York Yankees',    winnerId:147, loser:'San Francisco Giants',  loserId:137, result:'4-3'},
+    {year:1963,winner:'Los Angeles Dodgers', winnerId:119, loser:'New York Yankees',      loserId:147, result:'4-0'},
+    {year:1964,winner:'St. Louis Cardinals', winnerId:138, loser:'New York Yankees',      loserId:147, result:'4-3'},
+    {year:1965,winner:'Los Angeles Dodgers', winnerId:119, loser:'Minnesota Twins',       loserId:142, result:'4-3'},
+    {year:1966,winner:'Baltimore Orioles',   winnerId:110, loser:'Los Angeles Dodgers',   loserId:119, result:'4-0'},
+    {year:1967,winner:'St. Louis Cardinals', winnerId:138, loser:'Boston Red Sox',        loserId:111, result:'4-3'},
+    {year:1968,winner:'Detroit Tigers',      winnerId:116, loser:'St. Louis Cardinals',   loserId:138, result:'4-3'},
+    {year:1969,winner:'New York Mets',       winnerId:121, loser:'Baltimore Orioles',     loserId:110, result:'4-1'},
+    {year:1970,winner:'Baltimore Orioles',   winnerId:110, loser:'Cincinnati Reds',       loserId:113, result:'4-1'},
+    {year:1971,winner:'Pittsburgh Pirates',  winnerId:134, loser:'Baltimore Orioles',     loserId:110, result:'4-3'},
+    {year:1972,winner:'Oakland Athletics',   winnerId:133, loser:'Cincinnati Reds',       loserId:113, result:'4-3'},
+    {year:1973,winner:'Oakland Athletics',   winnerId:133, loser:'New York Mets',         loserId:121, result:'4-3'},
+    {year:1974,winner:'Oakland Athletics',   winnerId:133, loser:'Los Angeles Dodgers',   loserId:119, result:'4-1'},
+    {year:1975,winner:'Cincinnati Reds',     winnerId:113, loser:'Boston Red Sox',        loserId:111, result:'4-3'},
+    {year:1976,winner:'Cincinnati Reds',     winnerId:113, loser:'New York Yankees',      loserId:147, result:'4-0'},
+    {year:1977,winner:'New York Yankees',    winnerId:147, loser:'Los Angeles Dodgers',   loserId:119, result:'4-2'},
+    {year:1978,winner:'New York Yankees',    winnerId:147, loser:'Los Angeles Dodgers',   loserId:119, result:'4-2'},
+    {year:1979,winner:'Pittsburgh Pirates',  winnerId:134, loser:'Baltimore Orioles',     loserId:110, result:'4-3'},
+    {year:1980,winner:'Philadelphia Phillies',winnerId:143,loser:'Kansas City Royals',    loserId:118, result:'4-2'},
+    {year:1981,winner:'Los Angeles Dodgers', winnerId:119, loser:'New York Yankees',      loserId:147, result:'4-2'},
+    {year:1982,winner:'St. Louis Cardinals', winnerId:138, loser:'Milwaukee Brewers',     loserId:158, result:'4-3'},
+    {year:1983,winner:'Baltimore Orioles',   winnerId:110, loser:'Philadelphia Phillies', loserId:143, result:'4-1'},
+    {year:1984,winner:'Detroit Tigers',      winnerId:116, loser:'San Diego Padres',      loserId:135, result:'4-1'},
+    {year:1985,winner:'Kansas City Royals',  winnerId:118, loser:'St. Louis Cardinals',   loserId:138, result:'4-3'},
+    {year:1986,winner:'New York Mets',       winnerId:121, loser:'Boston Red Sox',        loserId:111, result:'4-3'},
+    {year:1987,winner:'Minnesota Twins',     winnerId:142, loser:'St. Louis Cardinals',   loserId:138, result:'4-3'},
+    {year:1988,winner:'Los Angeles Dodgers', winnerId:119, loser:'Oakland Athletics',     loserId:133, result:'4-1'},
+    {year:1989,winner:'Oakland Athletics',   winnerId:133, loser:'San Francisco Giants',  loserId:137, result:'4-0'},
+    {year:1990,winner:'Cincinnati Reds',     winnerId:113, loser:'Oakland Athletics',     loserId:133, result:'4-0'},
+    {year:1991,winner:'Minnesota Twins',     winnerId:142, loser:'Atlanta Braves',        loserId:144, result:'4-3'},
+    {year:1992,winner:'Toronto Blue Jays',   winnerId:141, loser:'Atlanta Braves',        loserId:144, result:'4-2'},
+    {year:1993,winner:'Toronto Blue Jays',   winnerId:141, loser:'Philadelphia Phillies', loserId:143, result:'4-2'},
+    {year:1995,winner:'Atlanta Braves',      winnerId:144, loser:'Cleveland Indians',     loserId:114, result:'4-2'},
+    {year:1996,winner:'New York Yankees',    winnerId:147, loser:'Atlanta Braves',        loserId:144, result:'4-2'},
+    {year:1997,winner:'Florida Marlins',     winnerId:146, loser:'Cleveland Indians',     loserId:114, result:'4-3'},
+    {year:1998,winner:'New York Yankees',    winnerId:147, loser:'San Diego Padres',      loserId:135, result:'4-0'},
+    {year:1999,winner:'New York Yankees',    winnerId:147, loser:'Atlanta Braves',        loserId:144, result:'4-0'},
+    {year:2000,winner:'New York Yankees',    winnerId:147, loser:'New York Mets',         loserId:121, result:'4-1'},
+    {year:2001,winner:'Arizona Diamondbacks',winnerId:109, loser:'New York Yankees',      loserId:147, result:'4-3'},
+    {year:2002,winner:'Anaheim Angels',      winnerId:108, loser:'San Francisco Giants',  loserId:137, result:'4-3'},
+    {year:2003,winner:'Florida Marlins',     winnerId:146, loser:'New York Yankees',      loserId:147, result:'4-2'},
+    {year:2004,winner:'Boston Red Sox',      winnerId:111, loser:'St. Louis Cardinals',   loserId:138, result:'4-0'},
+    {year:2005,winner:'Chicago White Sox',   winnerId:145, loser:'Houston Astros',        loserId:117, result:'4-0'},
+    {year:2006,winner:'St. Louis Cardinals', winnerId:138, loser:'Detroit Tigers',        loserId:116, result:'4-1'},
+    {year:2007,winner:'Boston Red Sox',      winnerId:111, loser:'Colorado Rockies',      loserId:115, result:'4-0'},
+    {year:2008,winner:'Philadelphia Phillies',winnerId:143,loser:'Tampa Bay Rays',        loserId:139, result:'4-1'},
+    {year:2009,winner:'New York Yankees',    winnerId:147, loser:'Philadelphia Phillies', loserId:143, result:'4-2'},
+    {year:2010,winner:'San Francisco Giants',winnerId:137, loser:'Texas Rangers',         loserId:140, result:'4-1'},
+    {year:2011,winner:'St. Louis Cardinals', winnerId:138, loser:'Texas Rangers',         loserId:140, result:'4-3'},
+    {year:2012,winner:'San Francisco Giants',winnerId:137, loser:'Detroit Tigers',        loserId:116, result:'4-0'},
+    {year:2013,winner:'Boston Red Sox',      winnerId:111, loser:'St. Louis Cardinals',   loserId:138, result:'4-2'},
+    {year:2014,winner:'San Francisco Giants',winnerId:137, loser:'Kansas City Royals',    loserId:118, result:'4-3'},
+    {year:2015,winner:'Kansas City Royals',  winnerId:118, loser:'New York Mets',         loserId:121, result:'4-1'},
+    {year:2016,winner:'Chicago Cubs',        winnerId:112, loser:'Cleveland Indians',     loserId:114, result:'4-3'},
+    {year:2017,winner:'Houston Astros',      winnerId:117, loser:'Los Angeles Dodgers',   loserId:119, result:'4-3'},
+    {year:2018,winner:'Boston Red Sox',      winnerId:111, loser:'Los Angeles Dodgers',   loserId:119, result:'4-1'},
+    {year:2019,winner:'Washington Nationals',winnerId:120, loser:'Houston Astros',        loserId:117, result:'4-3'},
+    {year:2020,winner:'Los Angeles Dodgers', winnerId:119, loser:'Tampa Bay Rays',        loserId:139, result:'4-2'},
+    {year:2021,winner:'Atlanta Braves',      winnerId:144, loser:'Houston Astros',        loserId:117, result:'4-2'},
+    {year:2022,winner:'Houston Astros',      winnerId:117, loser:'Philadelphia Phillies', loserId:143, result:'4-2'},
+    {year:2023,winner:'Texas Rangers',       winnerId:140, loser:'Arizona Diamondbacks',  loserId:109, result:'4-1'},
+    {year:2024,winner:'Los Angeles Dodgers', winnerId:119, loser:'New York Yankees',      loserId:147, result:'4-1'},
+  ];
+
+  // aliases for fuzzy team matching
+  const WS_ALIASES = {
+    'yankees':'New York Yankees','ny yankees':'New York Yankees','nyy':'New York Yankees',
+    'red sox':'Boston Red Sox','boston':'Boston Red Sox','bos':'Boston Red Sox',
+    'dodgers':'Los Angeles Dodgers','la dodgers':'Los Angeles Dodgers','lad':'Los Angeles Dodgers','brooklyn dodgers':'Los Angeles Dodgers','brooklyn':'Los Angeles Dodgers',
+    'cardinals':'St. Louis Cardinals','stl':'St. Louis Cardinals','st louis':'St. Louis Cardinals',
+    'giants':'San Francisco Giants','sf giants':'San Francisco Giants','sfg':'San Francisco Giants','new york giants':'San Francisco Giants',
+    'cubs':'Chicago Cubs','chc':'Chicago Cubs',
+    'athletics':'Oakland Athletics','a\'s':'Oakland Athletics','oakland':'Oakland Athletics','anaheim athletics':'Oakland Athletics','oak':'Oakland Athletics',
+    'reds':'Cincinnati Reds','cin':'Cincinnati Reds','cincinnati':'Cincinnati Reds',
+    'tigers':'Detroit Tigers','det':'Detroit Tigers',
+    'orioles':'Baltimore Orioles','bal':'Baltimore Orioles',
+    'pirates':'Pittsburgh Pirates','pit':'Pittsburgh Pirates',
+    'phillies':'Philadelphia Phillies','phi':'Philadelphia Phillies',
+    'twins':'Minnesota Twins','min':'Minnesota Twins',
+    'braves':'Atlanta Braves','atl':'Atlanta Braves','atlanta':'Atlanta Braves','milwaukee braves':'Atlanta Braves','boston braves':'Atlanta Braves',
+    'mets':'New York Mets','nym':'New York Mets',
+    'blue jays':'Toronto Blue Jays','tor':'Toronto Blue Jays','toronto':'Toronto Blue Jays',
+    'marlins':'Miami Marlins','mia':'Miami Marlins','miami':'Miami Marlins','florida marlins':'Miami Marlins',
+    'diamondbacks':'Arizona Diamondbacks','ari':'Arizona Diamondbacks','dbacks':'Arizona Diamondbacks',
+    'angels':'Los Angeles Angels','laa':'Los Angeles Angels','anaheim':'Los Angeles Angels','anaheim angels':'Los Angeles Angels',
+    'astros':'Houston Astros','hou':'Houston Astros',
+    'royals':'Kansas City Royals','kc':'Kansas City Royals','kcr':'Kansas City Royals',
+    'white sox':'Chicago White Sox','cws':'Chicago White Sox',
+    'nationals':'Washington Nationals','was':'Washington Nationals','wash':'Washington Nationals','washington senators':'Washington Nationals','senators':'Washington Nationals',
+    'guardians':'Cleveland Guardians','cle':'Cleveland Guardians','cleveland':'Cleveland Guardians','cleveland indians':'Cleveland Guardians','indians':'Cleveland Guardians',
+    'rangers':'Texas Rangers','tex':'Texas Rangers',
+  };
+
   async function searchWorldSeries() {
-    const year = document.getElementById('ws-year').value.trim();
-    if (!year) return;
+    const mode  = document.getElementById('ws-mode').value;
+    const query = document.getElementById('ws-query').value.trim();
+    if (!query) return;
     const el = document.getElementById('ws-result');
-    el.innerHTML = '<div class="spinner">[ LOADING... ]</div>';
 
-    const data = await fetch('/api/worldseries?year=' + encodeURIComponent(year)).then(r => r.json());
+    if (mode === 'year') {
+      el.innerHTML = '<div class="spinner">[ LOADING... ]</div>';
+      const data = await fetch('/api/worldseries?year=' + encodeURIComponent(query)).then(r => r.json());
+      if (data.error) { el.innerHTML = `<div class="error-msg">${data.error}</div>`; return; }
 
-    if (data.error) {
-      el.innerHTML = `<div class="error-msg">${data.error}</div>`;
-      return;
-    }
+      const dateStr = data.clinchDate
+        ? new Date(data.clinchDate + 'T12:00:00').toLocaleDateString([], {month:'long', day:'numeric', year:'numeric'})
+        : '';
+      const logoUrl = `https://www.mlbstatic.com/team-logos/team-cap-on-dark/${data.winnerId}.svg`;
 
-    const dateStr = data.clinchDate
-      ? new Date(data.clinchDate + 'T12:00:00').toLocaleDateString([], {month:'long', day:'numeric', year:'numeric'})
-      : '';
-
-    const logoUrl = `https://www.mlbstatic.com/team-logos/team-cap-on-dark/${data.winnerId}.svg`;
-
-    el.innerHTML = `
-      <div class="leaders-board" style="margin-bottom:20px">
-        <div class="leaders-title">
-          <span class="lt-name">&#127942; ${data.year} World Series</span>
-          <span class="lt-range">${dateStr}</span>
-        </div>
-        <div style="padding:16px 20px;display:flex;align-items:center;gap:20px">
-          <img src="${logoUrl}" alt="${data.winner}" style="width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(192,224,128,0.3))"
-               onerror="this.style.display='none'"/>
-          <div>
-            <div style="margin-bottom:10px">
-              <div style="font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:3px;color:#5a8a3a;text-transform:uppercase;margin-bottom:4px">Champion</div>
-              <div style="font-family:'Oswald',sans-serif;font-size:1.4rem;color:#c0e080;text-shadow:0 0 12px rgba(192,224,128,0.4)">${data.winner}</div>
-            </div>
-            <div style="display:flex;gap:24px;align-items:center">
-              <div>
-                <div style="font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:3px;color:#5a8a3a;text-transform:uppercase;margin-bottom:2px">Series</div>
-                <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#e8f0b0">${data.seriesResult}</div>
+      el.innerHTML = `
+        <div class="leaders-board" style="margin-bottom:20px">
+          <div class="leaders-title">
+            <span class="lt-name">&#004e38; ${data.year} World Series</span>
+            <span class="lt-range">${dateStr}</span>
+          </div>
+          <div style="padding:16px 20px;display:flex;align-items:center;gap:20px">
+            <img src="${logoUrl}" alt="${data.winner}" style="width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(192,224,128,0.3))"
+                 onerror="this.style.display='none'"/>
+            <div>
+              <div style="margin-bottom:10px">
+                <div style="font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:3px;color:#245c3c;text-transform:uppercase;margin-bottom:4px">Champion</div>
+                <div style="font-family:'Oswald',sans-serif;font-size:1.4rem;color:#52c47c;text-shadow:0 0 12px rgba(192,224,128,0.4)">${data.winner}</div>
               </div>
-              <div>
-                <div style="font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:3px;color:#5a8a3a;text-transform:uppercase;margin-bottom:2px">Defeated</div>
-                <div style="font-size:0.9rem;color:#6a9a4a">${data.loser}</div>
+              <div style="display:flex;gap:24px;align-items:center">
+                <div>
+                  <div style="font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:3px;color:#245c3c;text-transform:uppercase;margin-bottom:2px">Series</div>
+                  <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#90d4aa">${data.seriesResult}</div>
+                </div>
+                <div>
+                  <div style="font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:3px;color:#245c3c;text-transform:uppercase;margin-bottom:2px">Defeated</div>
+                  <div style="font-size:0.9rem;color:#2a6844">${data.loser}</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>`;
+        </div>`;
+    } else {
+      // Team search — use static dataset
+      const key = query.toLowerCase().trim();
+      const canonicalName = WS_ALIASES[key]
+        || WS_HISTORY.find(w => w.winner.toLowerCase().includes(key))?.winner
+        || null;
+
+      const wins = WS_HISTORY.filter(w =>
+        w.winner.toLowerCase().includes(key) ||
+        (canonicalName && w.winner === canonicalName)
+      );
+
+      if (wins.length === 0) {
+        el.innerHTML = `<div class="error-msg">No World Series titles found for "${query}".</div>`;
+        return;
+      }
+
+      const { winner, winnerId } = wins[wins.length - 1]; // use most recent for header logo
+      const logoUrl = `https://www.mlbstatic.com/team-logos/team-cap-on-dark/${winnerId}.svg`;
+
+      const rows = wins.map(w => `
+        <tr>
+          <td style="font-family:'Oswald',sans-serif;color:#52c47c;font-size:1rem;padding:8px 12px">${w.year}</td>
+          <td style="color:#90d4aa;padding:8px 12px">${w.result}</td>
+          <td style="color:#2a6844;padding:8px 12px">def. ${w.loser}</td>
+        </tr>`).join('');
+
+      el.innerHTML = `
+        <div class="leaders-board" style="margin-bottom:20px">
+          <div class="leaders-title">
+            <span class="lt-name">&#004e38; ${winner} — World Series Titles</span>
+            <span class="lt-range">${wins.length} Championship${wins.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div style="padding:12px 20px;display:flex;align-items:flex-start;gap:24px">
+            <img src="${logoUrl}" alt="${winner}" style="width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(192,224,128,0.3));flex-shrink:0;margin-top:4px"
+                 onerror="this.style.display='none'"/>
+            <table style="width:100%;border-collapse:collapse">
+              <thead>
+                <tr style="border-bottom:1px solid #2a4a1a">
+                  <th style="font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:3px;color:#245c3c;text-align:left;padding:4px 12px">YEAR</th>
+                  <th style="font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:3px;color:#245c3c;text-align:left;padding:4px 12px">RESULT</th>
+                  <th style="font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:3px;color:#245c3c;text-align:left;padding:4px 12px">OPPONENT</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </div>`;
+    }
   }
 
   // ─── STANDINGS ───────────────────────────────────────────────
@@ -1335,7 +1994,7 @@
     function divisionTable(div) {
       const rows = div.teams.map((t, i) => {
         const isLeader = t.divisionRank === 1;
-        const gb = t.gb === '-' ? '<span style="color:#c0e080">—</span>' : t.gb;
+        const gb = t.gb === '-' ? '<span style="color:#52c47c">—</span>' : t.gb;
         const wcRaw = t.wcGb;
         let wcHtml;
         if (wcRaw === '-' || wcRaw === '+0') {
@@ -1392,6 +2051,176 @@
       </div>`;
   }
 
+  // ─── SCHEDULE TAB ──────────────────────────────────────────
+  const MLB_TEAMS = [
+    {id:109,abbrev:'AZ',name:'Arizona Diamondbacks'},{id:133,abbrev:'ATH',name:'Athletics'},
+    {id:144,abbrev:'ATL',name:'Atlanta Braves'},{id:110,abbrev:'BAL',name:'Baltimore Orioles'},
+    {id:111,abbrev:'BOS',name:'Boston Red Sox'},{id:112,abbrev:'CHC',name:'Chicago Cubs'},
+    {id:145,abbrev:'CWS',name:'Chicago White Sox'},{id:113,abbrev:'CIN',name:'Cincinnati Reds'},
+    {id:114,abbrev:'CLE',name:'Cleveland Guardians'},{id:115,abbrev:'COL',name:'Colorado Rockies'},
+    {id:116,abbrev:'DET',name:'Detroit Tigers'},{id:117,abbrev:'HOU',name:'Houston Astros'},
+    {id:118,abbrev:'KC',name:'Kansas City Royals'},{id:108,abbrev:'LAA',name:'Los Angeles Angels'},
+    {id:119,abbrev:'LAD',name:'Los Angeles Dodgers'},{id:146,abbrev:'MIA',name:'Miami Marlins'},
+    {id:158,abbrev:'MIL',name:'Milwaukee Brewers'},{id:142,abbrev:'MIN',name:'Minnesota Twins'},
+    {id:121,abbrev:'NYM',name:'New York Mets'},{id:147,abbrev:'NYY',name:'New York Yankees'},
+    {id:143,abbrev:'PHI',name:'Philadelphia Phillies'},{id:134,abbrev:'PIT',name:'Pittsburgh Pirates'},
+    {id:135,abbrev:'SD',name:'San Diego Padres'},{id:137,abbrev:'SF',name:'San Francisco Giants'},
+    {id:136,abbrev:'SEA',name:'Seattle Mariners'},{id:138,abbrev:'STL',name:'St. Louis Cardinals'},
+    {id:139,abbrev:'TB',name:'Tampa Bay Rays'},{id:140,abbrev:'TEX',name:'Texas Rangers'},
+    {id:141,abbrev:'TOR',name:'Toronto Blue Jays'},{id:120,abbrev:'WSH',name:'Washington Nationals'},
+  ];
+
+  let scheduleTeamsInited = false;
+  function initScheduleTeams() {
+    if (scheduleTeamsInited) return;
+    scheduleTeamsInited = true;
+    const sel = document.getElementById('schedule-team');
+    MLB_TEAMS.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      opt.textContent = t.name;
+      sel.appendChild(opt);
+    });
+  }
+
+  async function loadSchedule() {
+    const teamId = document.getElementById('schedule-team').value;
+    if (!teamId) return;
+    const el = document.getElementById('schedule-board');
+    el.innerHTML = '<div class="spinner">[ LOADING... ]</div>';
+    let data;
+    try {
+      data = await fetch(`/api/schedule/${teamId}`).then(r => r.json());
+    } catch(e) {
+      el.innerHTML = '<div class="error-msg">Error loading schedule.</div>';
+      return;
+    }
+    const today = new Date().toISOString().slice(0,10);
+    const games = data.games || [];
+    const teamColor = TEAM_COLORS[data.teamAbbrev] || '#245c3c';
+
+    // Split into recent (last 15 completed + live) and upcoming
+    const completed = games.filter(g => g.result === 'W' || g.result === 'L' || g.result === 'Live');
+    const upcoming  = games.filter(g => g.result === 'Upcoming');
+    const recentCompleted = completed.slice(-15);
+
+    function gameRow(g) {
+      const isToday = g.date === today;
+      const atHome = g.isHome;
+      const oppLogo = `<img src="https://www.mlbstatic.com/team-logos/team-cap-on-dark/${g.opponentId}.svg" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;opacity:0.85" onerror="this.style.display='none'"/>`;
+      let resultHtml = '';
+      if (g.result === 'W') resultHtml = `<span class="result-w">W</span> <span class="sched-score">${g.teamScore}-${g.opponentScore}</span>`;
+      else if (g.result === 'L') resultHtml = `<span class="result-l">L</span> <span class="sched-score">${g.teamScore}-${g.opponentScore}</span>`;
+      else if (g.result === 'Live') resultHtml = `<span class="result-live">● LIVE ${g.teamScore}-${g.opponentScore}</span>`;
+      else {
+        let timeStr = g.gameTime;
+        try { timeStr = new Date(g.gameTime).toLocaleTimeString([],{hour:'numeric',minute:'2-digit',timeZoneName:'short'}); } catch(e){}
+        resultHtml = `<span class="result-upcoming">${timeStr}</span>`;
+      }
+      const record = g.result === 'W' || g.result === 'L' ? `<span class="sched-record-col">${g.teamWins}-${g.teamLosses}</span>` : '';
+      const tvHtml = g.tvNetwork ? `<span style="font-size:0.65rem;color:#2da868;opacity:0.85">📺 ${g.tvNetwork}</span>` : '';
+      return `<tr class="${isToday?'today-row':''}">
+        <td>${g.date}</td>
+        <td><span class="sched-home">${atHome ? 'vs' : '@'}</span></td>
+        <td class="sched-opp">${oppLogo}${g.opponentAbbrev}</td>
+        <td>${resultHtml}</td>
+        <td>${record}</td>
+        <td>${tvHtml}</td>
+      </tr>`;
+    }
+
+    const upcomingNext = upcoming.slice(0, 20);
+
+    el.innerHTML = `
+      <div class="schedule-record" style="display:flex;align-items:center;gap:16px;color:${teamColor};filter:brightness(1.5)">
+        <img src="https://www.mlbstatic.com/team-logos/${data.teamId}.svg" style="width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 0 6px ${teamColor}88)" onerror="this.style.display='none'"/>
+        <div>
+          <div style="font-size:1.3rem;letter-spacing:2px">${data.teamName}</div>
+          <div style="color:#245c3c;font-size:0.75rem;letter-spacing:1px">${data.wins}-${data.losses} &nbsp; (${new Date().getFullYear()} Season)</div>
+        </div>
+      </div>
+      <div class="sb-board" style="margin-bottom:20px">
+        <div class="sb-board-header"><span class="sb-board-title">RECENT RESULTS</span></div>
+        <table class="schedule-table">
+          <thead><tr><th>DATE</th><th></th><th>OPP</th><th>RESULT</th><th>RECORD</th><th>TV</th></tr></thead>
+          <tbody>${recentCompleted.map(gameRow).join('')}</tbody>
+        </table>
+      </div>
+      <div class="sb-board">
+        <div class="sb-board-header"><span class="sb-board-title">UPCOMING GAMES</span></div>
+        <table class="schedule-table">
+          <thead><tr><th>DATE</th><th></th><th>OPP</th><th>TIME</th><th></th><th>TV</th></tr></thead>
+          <tbody>${upcomingNext.map(gameRow).join('')}</tbody>
+        </table>
+      </div>`;
+  }
+
+  // ─── PLAYOFF PICTURE ───────────────────────────────────────
+  async function loadPlayoffPicture() {
+    const el = document.getElementById('playoff-board');
+    el.innerHTML = '<div class="spinner">[ LOADING... ]</div>';
+    let data;
+    try {
+      data = await fetch('/api/playoff').then(r => r.json());
+    } catch(e) {
+      el.innerHTML = '<div class="error-msg">Error loading playoff picture.</div>';
+      return;
+    }
+
+    function seedRow(s, idx) {
+      const isDivLeader = s.seed <= 3;
+      const isElim = s.eliminationNumber === 'E';
+      const clinch = s.clinchIndicator ? `<span class="seed-clinch">${s.clinchIndicator.toUpperCase()}</span>` : '';
+      const gbStr = s.gb && s.gb !== '-' ? (s.gb.startsWith('+') ? `<span style="color:#006747">${s.gb}</span>` : s.gb) : '—';
+      const wcDivider = s.seed === 4 ? 'wc-divider' : '';
+      const wcLabel  = s.seed === 4 ? `<div class="playoff-wc-label">WILD CARD</div>` : '';
+      return `${wcLabel}<div class="playoff-seed-row ${isDivLeader?'div-leader':'wc-row'} ${wcDivider} ${isElim?'eliminated':''}">
+        <div class="seed-num">${s.seed}</div>
+        <div class="seed-logo">
+          <img src="https://www.mlbstatic.com/team-logos/team-cap-on-dark/${s.teamId}.svg"
+               onerror="this.style.display='none'" />
+        </div>
+        <div class="seed-info">
+          <div class="seed-name">${s.teamAbbrev} ${clinch}</div>
+          <div class="seed-div">${isDivLeader ? s.divisionName : 'Wild Card'}</div>
+        </div>
+        <div class="seed-wl">${s.wins}-${s.losses}</div>
+        <div class="seed-gb">${gbStr}</div>
+      </div>`;
+    }
+
+    function leagueBlock(league) {
+      return `
+        <div>
+          <div class="playoff-league-header">&#9644; ${league.leagueName}</div>
+          ${(league.seeds || []).map(seedRow).join('')}
+        </div>`;
+    }
+
+    el.innerHTML = `
+      <div class="sb-board-header" style="margin-bottom:16px">
+        <span class="sb-board-title">2026 PLAYOFF PICTURE</span>
+      </div>
+      <div class="playoff-layout">
+        ${(data.leagues || []).map(leagueBlock).join('')}
+      </div>`;
+  }
+
+  const TEAM_COLORS = {
+    ARI: '#A71930', ATL: '#13274F', BAL: '#DF4601', BOS: '#BD3039',
+    CHC: '#CC3433', CWS: '#000000', CIN: '#C6011F', CLE: '#E31937',
+    COL: '#333366', DET: '#0C2C56', HOU: '#EB6E1F', KC:  '#004687',
+    LAA: '#BA0021', LAD: '#005A9C', MIA: '#0077C8', MIL: '#B6922E',
+    MIN: '#002B5C', NYM: '#FF5910', NYY: '#003087', OAK: '#003831',
+    PHI: '#E81828', PIT: '#FDB827', SD:  '#7F411C', SEA: '#005C5C',
+    SF:  '#8B6F4E', STL: '#C41E3A', TB:  '#8FBCE6', TEX: '#003278',
+    TOR: '#134A8E', WSH: '#AB0003',
+  };
+
+  function teamColor(abbrev) {
+    return TEAM_COLORS[abbrev] || '#16472e';
+  }
+
   async function toggleLineup(btn, gamePk, awayAbbrev, homeAbbrev) {
     const row = document.getElementById('lp-row-' + gamePk);
     const panel = document.getElementById('bs-' + gamePk);
@@ -1402,8 +2231,11 @@
     }
     btn.textContent = 'LOADING…';
     try {
-      const d = await fetch(`/api/game/${gamePk}`).then(r => r.json());
-      panel.innerHTML = renderLineup(d, awayAbbrev, homeAbbrev);
+      const [d, plays] = await Promise.all([
+        fetch(`/api/game/${gamePk}`).then(r => r.json()),
+        fetch(`/api/game/${gamePk}/plays`).then(r => r.json())
+      ]);
+      panel.innerHTML = renderLineup(d, plays, awayAbbrev, homeAbbrev);
       row.style.display = '';
       btn.textContent = 'LINEUP ▴';
       const firstTab = panel.querySelector('.bs-tab');
@@ -1427,7 +2259,7 @@
     });
   }
 
-  function renderLineup(d, awayAbbrev, homeAbbrev) {
+  function renderLineup(d, plays, awayAbbrev, homeAbbrev) {
     const id = `g${Math.random().toString(36).slice(2,7)}`;
 
     function batRow(b) {
@@ -1438,35 +2270,82 @@
         <td>${slot}</td>
         <td>${b.position}</td>
         <td>${b.name}${indicator ? `<span style="font-size:0.6rem;letter-spacing:2px;margin-left:6px;opacity:0.75">${indicator}</span>` : ''}</td>
-        <td>${b.ab}</td><td>${b.h}</td><td>${b.hr}</td>
+        <td>${b.avg || '.---'}</td><td>${b.ab}</td><td>${b.h}</td><td>${b.hr}</td>
         <td>${b.rbi}</td><td>${b.bb}</td><td>${b.k}</td><td>${b.r}</td>
       </tr>`;
     }
 
     function batTable(batters) {
-      if (!batters || !batters.length) return '<p style="color:#4a6a4a;font-size:0.7rem;padding:8px">No data</p>';
+      if (!batters || !batters.length) return '<p style="color:#1a4830;font-size:0.7rem;padding:8px">No data</p>';
       return `<table class="boxscore-table">
         <thead><tr>
           <th>#</th><th>POS</th><th style="text-align:left">BATTER</th>
-          <th>AB</th><th>H</th><th>HR</th><th>RBI</th><th>BB</th><th>K</th><th>R</th>
+          <th>AVG</th><th>AB</th><th>H</th><th>HR</th><th>RBI</th><th>BB</th><th>K</th><th>R</th>
         </tr></thead>
         <tbody>${batters.map(batRow).join('')}</tbody>
       </table>`;
     }
 
     function pitTable(pitchers) {
-      if (!pitchers || !pitchers.length) return '<p style="color:#4a6a4a;font-size:0.7rem;padding:8px">No data</p>';
+      if (!pitchers || !pitchers.length) return '<p style="color:#1a4830;font-size:0.7rem;padding:8px">No data</p>';
       return `<table class="boxscore-table">
         <thead><tr>
           <th style="text-align:left">PITCHER</th>
-          <th>IP</th><th>H</th><th>ER</th><th>BB</th><th>K</th><th>P</th>
+          <th>ERA</th><th>IP</th><th>H</th><th>ER</th><th>BB</th><th>K</th><th>P</th>
         </tr></thead>
         <tbody>${pitchers.map(p=>`<tr${p.isCurrent?' class="current-pitcher"':''}>
           <td>${p.name}${p.isCurrent ? ' ● NOW' : ''}</td>
-          <td>${p.ip}</td><td>${p.h}</td><td>${p.er}</td>
+          <td>${p.era || '-.-'}</td><td>${p.ip}</td><td>${p.h}</td><td>${p.er}</td>
           <td>${p.bb}</td><td>${p.k}</td><td>${p.pitches}</td>
         </tr>`).join('')}</tbody>
       </table>`;
+    }
+
+    function renderPlayFeed(plays) {
+      if (!plays) return '<p style="color:#1a4830;font-size:0.7rem;padding:8px">No play data</p>';
+      const homeWP = plays.homeWinProbability ?? 50;
+      const awayWP = plays.awayWinProbability ?? 50;
+      const awayColor = teamColor(awayAbbrev);
+      const homeColor = teamColor(homeAbbrev);
+      const wpBar = `
+        <div class="wp-bar-wrap">
+          <div class="wp-bar-label">
+            <span style="color:${awayColor};filter:brightness(1.6)">${awayAbbrev} <span class="wp-pct">${awayWP.toFixed(1)}%</span></span>
+            <span>WIN PROBABILITY</span>
+            <span style="color:${homeColor};filter:brightness(1.6)"><span class="wp-pct">${homeWP.toFixed(1)}%</span> ${homeAbbrev}</span>
+          </div>
+          <div class="wp-bar">
+            <div class="wp-bar-away" style="width:${awayWP}%;background:${awayColor}"></div>
+            <div class="wp-bar-home" style="background:${homeColor}"></div>
+          </div>
+        </div>`;
+
+      const halfSymbol = h => h === 'top' ? '▲' : '▼';
+      const playStyle  = p => {
+        const c = p.halfInning === 'top' ? awayColor : homeColor;
+        return 'color:' + c + ';filter:brightness(1.6)';
+      };
+      const recentItems = (plays.recentPlays || []).map(p => `
+        <div class="play-item${p.isScoringPlay?' scoring':''}" style="${playStyle(p)}">
+          <span class="play-inning">${halfSymbol(p.halfInning)} ${p.inning}</span>
+          <span class="play-score">${p.awayScore}-${p.homeScore}</span>
+          <span class="play-desc">${p.description}</span>
+        </div>`).join('');
+
+      const scoringItems = (plays.scoringPlays || []).slice().reverse().map(p => `
+        <div class="play-item scoring" style="${playStyle(p)}">
+          <span class="play-inning">${halfSymbol(p.halfInning)} ${p.inning}</span>
+          <span class="play-score">${p.awayScore}-${p.homeScore}</span>
+          <span class="play-desc">${p.description}</span>
+        </div>`).join('');
+
+      return `
+        ${wpBar}
+        <div class="boxscore-side-label" style="margin-top:12px">RECENT PLAYS</div>
+        <div class="play-feed">${recentItems || '<p style="color:#1a4830;font-size:0.7rem;padding:4px">No plays yet</p>'}</div>
+        <div class="boxscore-side-label" style="margin-top:12px">SCORING PLAYS</div>
+        <div class="play-feed">${scoringItems || '<p style="color:#1a4830;font-size:0.7rem;padding:4px">No runs scored</p>'}</div>
+      `;
     }
 
     const tabs = [
@@ -1474,6 +2353,7 @@
       { label: `${homeAbbrev} LINEUP`, target: `${id}-hb`, content: batTable(d.homeBatters) },
       { label: `${awayAbbrev} PITCHING`, target: `${id}-ap`, content: pitTable(d.awayPitchers) },
       { label: `${homeAbbrev} PITCHING`, target: `${id}-hp`, content: pitTable(d.homePitchers) },
+      { label: `PLAYS`, target: `${id}-wp`, content: renderPlayFeed(plays) },
     ];
 
     return `
@@ -1485,7 +2365,7 @@
   }
 
   // Legacy alias
-  function renderBoxScore(d, away, home) { return renderLineup(d, away, home); }
+  function renderBoxScore(d, away, home) { return renderLineup(d, null, away, home); }
 </script>
 </body>
 </html>

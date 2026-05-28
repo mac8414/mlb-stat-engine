@@ -1,0 +1,25 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.5)
+
+20:22:56.557 INFO  [main] org.example.Main - Starting Main v1.0-SNAPSHOT using Java 17.0.18 with PID 53567 (/Users/hunte/IdeaProjects/mlb-stat-engine/target/mlb-stat-engine-1.0-SNAPSHOT.jar started by hunte in /Users/hunte/IdeaProjects/mlb-stat-engine)
+20:22:56.558 INFO  [main] org.example.Main - No active profile set, falling back to 1 default profile: "default"
+20:22:56.920 INFO  [main] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+20:22:56.926 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+20:22:56.926 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+20:22:56.940 INFO  [main] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+20:22:56.941 INFO  [main] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 346 ms
+20:22:57.074 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+20:22:57.157 INFO  [main] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+20:22:57.166 INFO  [main] org.example.Main - Started Main in 0.808 seconds (process running for 1.068)
+20:23:01.109 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+20:23:01.109 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+20:23:01.109 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+20:23:01.125 INFO  [http-nio-8080-exec-1] o.e.controller.PlayerController - GET /api/scores division=AL East date=null
+20:23:01.126 DEBUG [http-nio-8080-exec-1] org.example.service.PlayerService - MLB API GET: https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=2026-05-27&hydrate=linescore,team,broadcasts
+20:23:01.577 DEBUG [http-nio-8080-exec-1] org.example.service.PlayerService - MLB API response length: 144305 chars

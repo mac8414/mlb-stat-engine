@@ -20,6 +20,7 @@ public class ScoreboardGame {
     public String gameTime;
     public boolean isLive;
     public boolean isFinal;
+    public boolean isTopInning;
 
     public int gamePk;
 
@@ -32,4 +33,5 @@ public class ScoreboardGame {
     public boolean runnerOnFirst;
     public boolean runnerOnSecond;
     public boolean runnerOnThird;
+    public String tvNetwork;     // e.g. "FS1", "MASN", "" if no TV info
 }

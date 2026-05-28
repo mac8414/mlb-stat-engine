@@ -3,6 +3,8 @@ package org.example.service;
 import org.example.model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -17,6 +19,8 @@ import java.util.List;
 
 @Service
 public class PlayerService {
+
+    private static final Logger log = LoggerFactory.getLogger(PlayerService.class);
 
     private final HttpClient client = HttpClient.newHttpClient();
 
@@ -123,6 +127,20 @@ public class PlayerService {
 
             if (response.hitting == null && response.pitching == null) {
                 response.error = "No stats found for " + response.fullName + " in " + year + ".";
+            }
+
+            // Fetch recent form splits (L7/L14/L30) for the current season only
+            if (year.equals(String.valueOf(currentYear)) && (response.hitting != null || response.pitching != null)) {
+                try {
+                    String group = response.hitting != null ? "hitting" : "pitching";
+                    PlayerStatsResponse.RecentForm form = new PlayerStatsResponse.RecentForm();
+                    form.l7  = fetchSplit(id, group, year, 7);
+                    form.l14 = fetchSplit(id, group, year, 14);
+                    form.l30 = fetchSplit(id, group, year, 30);
+                    if (form.l7 != null || form.l14 != null || form.l30 != null) {
+                        response.recentForm = form;
+                    }
+                } catch (Exception ignored) {}
             }
 
             // Fetch career best batting average
@@ -335,11 +353,80 @@ public class PlayerService {
     }
 
     private String get(String url) throws Exception {
+        log.debug("MLB API GET: {}", url);
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        String body = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        log.debug("MLB API response length: {} chars", body.length());
+        return body;
     }
 
-    public List<ScoreboardGame> getScores(String division) {
+    private PlayerStatsResponse.SplitLine fetchSplit(int playerId, String group, String season, int games) {
+        try {
+            String url = "https://statsapi.mlb.com/api/v1/people/" + playerId
+                    + "/stats?stats=lastXGames&group=" + group + "&gameType=R&season=" + season + "&limit=" + games;
+            JSONArray statsArr = new JSONObject(get(url)).optJSONArray("stats");
+            if (statsArr == null || statsArr.isEmpty()) return null;
+            JSONArray splits = statsArr.getJSONObject(0).optJSONArray("splits");
+            if (splits == null || splits.isEmpty()) return null;
+            JSONObject s = splits.getJSONObject(0).getJSONObject("stat");
+            PlayerStatsResponse.SplitLine line = new PlayerStatsResponse.SplitLine();
+            line.games = s.optInt("gamesPlayed", games);
+            if (group.equals("hitting")) {
+                line.avg        = s.optString("avg", "---");
+                line.ops        = s.optString("ops", "---");
+                line.obp        = s.optString("obp", "---");
+                line.slg        = s.optString("slg", "---");
+                line.homeRuns   = s.optInt("homeRuns");
+                line.rbi        = s.optInt("rbi");
+                line.strikeOuts = s.optInt("strikeOuts");
+            } else {
+                line.era            = s.optString("era", "---");
+                line.whip           = s.optString("whip", "---");
+                line.inningsPitched = s.optString("inningsPitched", "---");
+                line.wins           = s.optInt("wins");
+                line.losses         = s.optInt("losses");
+                line.strikeOuts     = s.optInt("strikeOuts");
+            }
+            return line;
+        } catch (Exception e) {
+            log.debug("Could not fetch split (L{}) for player {}: {}", games, playerId, e.getMessage());
+            return null;
+        }
+    }
+
+    /** Extract the best TV callsign from a game's broadcasts array. Prefers national English TV, falls back to home team local TV. */
+    private String extractTvNetwork(JSONObject game) {
+        JSONArray bcs = game.optJSONArray("broadcasts");
+        if (bcs == null) return "";
+        // Collect English TV broadcasts
+        List<String> national = new ArrayList<>();
+        List<String> local    = new ArrayList<>();
+        for (int i = 0; i < bcs.length(); i++) {
+            JSONObject b = bcs.optJSONObject(i);
+            if (b == null) continue;
+            if (!"TV".equals(b.optString("type"))) continue;
+            if (!"en".equals(b.optString("language", "en"))) continue;
+            String cs = b.optString("callSign", b.optString("name", "")).trim();
+            if (cs.isEmpty()) continue;
+            if (b.optBoolean("isNational")) national.add(cs);
+            else local.add(cs);
+        }
+        if (!national.isEmpty()) return national.get(0);
+        // Return home team's local TV if available
+        for (int i = 0; i < bcs.length(); i++) {
+            JSONObject b = bcs.optJSONObject(i);
+            if (b == null) continue;
+            if (!"TV".equals(b.optString("type"))) continue;
+            if (!"en".equals(b.optString("language", "en"))) continue;
+            if ("home".equals(b.optString("homeAway"))) {
+                String cs = b.optString("callSign", b.optString("name", "")).trim();
+                if (!cs.isEmpty()) return cs;
+            }
+        }
+        return local.isEmpty() ? "" : local.get(0);
+    }
+
+    public List<ScoreboardGame> getScores(String division, String date) {
         List<ScoreboardGame> games = new ArrayList<>();
         try {
             // Map short division name to MLB API division name substring
@@ -353,9 +440,10 @@ public class PlayerService {
                 default           -> division;
             };
 
-            String today = LocalDate.now().toString();
-            String url = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=" + today
-                    + "&hydrate=linescore,team";
+            String dateStr = (date != null && !date.isBlank()) ? date
+                    : LocalDate.now(java.time.ZoneId.of("America/New_York")).toString();
+            String url = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=" + dateStr
+                    + "&hydrate=linescore,team,broadcasts";
             JSONObject json = new JSONObject(get(url));
             JSONArray dates = json.optJSONArray("dates");
             if (dates == null || dates.isEmpty()) return games;
@@ -418,6 +506,7 @@ public class PlayerService {
                     }
                     int inningNum = ls.optInt("currentInning", 0);
                     String inningHalf = ls.optString("inningHalf", "");
+                    sg.isTopInning = ls.optBoolean("isTopInning", true);
                     if (sg.isFinal) {
                         sg.currentInning = "FINAL";
                     } else if (inningNum > 0) {
@@ -451,10 +540,11 @@ public class PlayerService {
                     sg.status = gameDate; // frontend will parse and format in user's local TZ
                 }
 
+                sg.tvNetwork = extractTvNetwork(g);
                 games.add(sg);
             }
         } catch (Exception e) {
-            // Return what we have on error
+            log.error("Error fetching scoreboard for division {}: {}", division, e.getMessage(), e);
         }
         return games;
     }
@@ -698,6 +788,9 @@ public class PlayerService {
                         bl.bb  = bat.optInt("baseOnBalls", 0);
                         bl.k   = bat.optInt("strikeOuts", 0);
                         bl.r   = bat.optInt("runs", 0);
+                        JSONObject seasonBat = p.optJSONObject("seasonStats") != null
+                                ? p.getJSONObject("seasonStats").optJSONObject("batting") : null;
+                        bl.avg = seasonBat != null ? seasonBat.optString("avg", ".---") : ".---";
                         sideList.add(bl);
                     }
                 }
@@ -724,6 +817,9 @@ public class PlayerService {
                         pl.bb      = pit.optInt("baseOnBalls", 0);
                         pl.k       = pit.optInt("strikeOuts", 0);
                         pl.pitches = pit.optInt("numberOfPitches", 0);
+                        JSONObject seasonPit = p.optJSONObject("seasonStats") != null
+                                ? p.getJSONObject("seasonStats").optJSONObject("pitching") : null;
+                        pl.era = seasonPit != null ? seasonPit.optString("era", "-.-") : "-.-";
                         pl.isCurrent = !currentPitcherName.isEmpty() && pl.name.equals(currentPitcherName);
                         if (side.equals("away")) detail.awayPitchers.add(pl);
                         else detail.homePitchers.add(pl);
@@ -731,8 +827,236 @@ public class PlayerService {
                 }
             }
         } catch (Exception e) {
-            // Return partial data on error
+            log.error("Error fetching live game detail for gamePk {}: {}", gamePk, e.getMessage(), e);
         }
         return detail;
+    }
+
+    public GamePlayFeed getPlayFeed(int gamePk) {
+        GamePlayFeed feed = new GamePlayFeed();
+        feed.recentPlays  = new ArrayList<>();
+        feed.scoringPlays = new ArrayList<>();
+        try {
+            String url = "https://statsapi.mlb.com/api/v1/game/" + gamePk + "/winProbability";
+            JSONArray plays = new JSONArray(get(url));
+
+            // Current win probability from last play
+            if (plays.length() > 0) {
+                JSONObject last = plays.getJSONObject(plays.length() - 1);
+                feed.homeWinProbability = last.optDouble("homeTeamWinProbability", 50);
+                feed.awayWinProbability = last.optDouble("awayTeamWinProbability", 50);
+            } else {
+                feed.homeWinProbability = 50;
+                feed.awayWinProbability = 50;
+            }
+
+            // Collect all plays into items
+            List<GamePlayFeed.PlayItem> all = new ArrayList<>();
+            for (int i = 0; i < plays.length(); i++) {
+                JSONObject p = plays.getJSONObject(i);
+                JSONObject result = p.optJSONObject("result");
+                JSONObject about  = p.optJSONObject("about");
+                if (result == null || about == null) continue;
+
+                GamePlayFeed.PlayItem item = new GamePlayFeed.PlayItem();
+                item.description       = result.optString("description", "");
+                item.event             = result.optString("event", "");
+                item.inning            = about.optInt("inning", 0);
+                item.halfInning        = about.optString("halfInning", "top");
+                item.awayScore         = result.optInt("awayScore", 0);
+                item.homeScore         = result.optInt("homeScore", 0);
+                item.rbi               = result.optInt("rbi", 0);
+                item.isScoringPlay     = about.optBoolean("isScoringPlay", false);
+                item.homeWinProbability = p.optDouble("homeTeamWinProbability", 50);
+                item.awayWinProbability = p.optDouble("awayTeamWinProbability", 50);
+                all.add(item);
+
+                if (item.isScoringPlay) feed.scoringPlays.add(item);
+            }
+
+            // Last 8 plays for recent feed
+            int start = Math.max(0, all.size() - 8);
+            for (int i = all.size() - 1; i >= start; i--) {
+                feed.recentPlays.add(all.get(i));
+            }
+        } catch (Exception e) {
+            log.error("Error fetching play feed for gamePk {}: {}", gamePk, e.getMessage(), e);
+        }
+        return feed;
+    }
+
+    public TeamScheduleResponse getTeamSchedule(int teamId) {
+        TeamScheduleResponse resp = new TeamScheduleResponse();
+        resp.games = new ArrayList<>();
+        try {
+            String season = String.valueOf(Year.now().getValue());
+            String url = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=" + teamId
+                    + "&season=" + season + "&gameType=R&hydrate=team,linescore,broadcasts";
+            JSONObject data = new JSONObject(get(url));
+            JSONArray dates = data.optJSONArray("dates");
+            if (dates == null) return resp;
+
+            int wins = 0, losses = 0;
+            for (int i = 0; i < dates.length(); i++) {
+                JSONArray games = dates.getJSONObject(i).optJSONArray("games");
+                if (games == null) continue;
+                for (int j = 0; j < games.length(); j++) {
+                    JSONObject g = games.getJSONObject(j);
+                    JSONObject away = g.getJSONObject("teams").getJSONObject("away");
+                    JSONObject home = g.getJSONObject("teams").getJSONObject("home");
+                    JSONObject awayTeam = away.getJSONObject("team");
+                    JSONObject homeTeam = home.getJSONObject("team");
+
+                    boolean isHome = homeTeam.optInt("id") == teamId;
+                    JSONObject myTeam = isHome ? home : away;
+                    JSONObject oppTeam = isHome ? away : home;
+
+                    // Set team name/abbrev from first game
+                    if (resp.teamName == null) {
+                        JSONObject myT = isHome ? homeTeam : awayTeam;
+                        resp.teamId     = teamId;
+                        resp.teamName   = myT.optString("name", "");
+                        resp.teamAbbrev = myT.optString("abbreviation", "");
+                    }
+
+                    JSONObject oppT = isHome ? awayTeam : homeTeam;
+                    TeamScheduleResponse.ScheduleGame sg = new TeamScheduleResponse.ScheduleGame();
+                    sg.date          = g.optString("officialDate", "");
+                    sg.gameTime      = g.optString("gameDate", "");
+                    sg.opponentId    = oppT.optInt("id");
+                    sg.opponentName  = oppT.optString("name", "");
+                    sg.opponentAbbrev = oppT.optString("abbreviation", "");
+                    sg.isHome        = isHome;
+
+                    String state = g.getJSONObject("status").optString("detailedState", "");
+                    // Skip postponed/cancelled games entirely
+                    if (state.equals("Postponed") || state.equals("Cancelled") || state.equals("Suspended")) continue;
+
+                    boolean isFinal = state.equals("Final") || state.equals("Game Over");
+                    boolean isLive  = state.equals("In Progress") || state.contains("Delayed");
+
+                    if (isFinal) {
+                        sg.teamScore     = myTeam.optInt("score", 0);
+                        sg.opponentScore = oppTeam.optInt("score", 0);
+                        boolean won = Boolean.TRUE.equals(myTeam.opt("isWinner"));
+                        sg.result = won ? "W" : "L";
+                        if (won) wins++; else losses++;
+                        sg.teamWins   = wins;
+                        sg.teamLosses = losses;
+                    } else if (isLive) {
+                        sg.teamScore     = myTeam.optInt("score", 0);
+                        sg.opponentScore = oppTeam.optInt("score", 0);
+                        sg.result = "Live";
+                    } else {
+                        sg.result = "Upcoming";
+                    }
+                    sg.tvNetwork = extractTvNetwork(g);
+                    resp.games.add(sg);
+                }
+            }
+            resp.wins   = wins;
+            resp.losses = losses;
+        } catch (Exception e) {
+            log.error("Error fetching team schedule for teamId {}: {}", teamId, e.getMessage(), e);
+        }
+        return resp;
+    }
+
+    public PlayoffPicture getPlayoffPicture() {
+        PlayoffPicture picture = new PlayoffPicture();
+        picture.leagues = new ArrayList<>();
+        try {
+            String season = String.valueOf(Year.now().getValue());
+            // Get division leaders (seed 1-3) and wild card rankings (seed 4-6)
+            String divUrl = "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=" + season
+                    + "&standingsTypes=regularSeason&hydrate=team,division,league";
+            String wcUrl  = "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=" + season
+                    + "&standingsTypes=wildCard&hydrate=team,division,league";
+
+            JSONArray divRecords = new JSONObject(get(divUrl)).optJSONArray("records");
+            JSONArray wcRecords  = new JSONObject(get(wcUrl)).optJSONArray("records");
+
+            // Group division records by league
+            java.util.Map<Integer, List<JSONObject>> divByLeague = new java.util.HashMap<>();
+            if (divRecords != null) {
+                for (int i = 0; i < divRecords.length(); i++) {
+                    JSONObject rec = divRecords.getJSONObject(i);
+                    int leagueId = rec.optJSONObject("league") != null
+                            ? rec.getJSONObject("league").optInt("id") : 0;
+                    divByLeague.computeIfAbsent(leagueId, k -> new ArrayList<>()).add(rec);
+                }
+            }
+
+            // Process each league
+            for (int[] leagueInfo : new int[][]{{103, 0}, {104, 0}}) {
+                int leagueId = leagueInfo[0];
+                PlayoffPicture.LeaguePlayoff lp = new PlayoffPicture.LeaguePlayoff();
+                lp.leagueName  = leagueId == 103 ? "American League" : "National League";
+                lp.leagueShort = leagueId == 103 ? "AL" : "NL";
+                lp.seeds = new ArrayList<>();
+
+                // Seeds 1-3: division leaders
+                List<JSONObject> divs = divByLeague.getOrDefault(leagueId, new ArrayList<>());
+                // Sort East/Central/West
+                divs.sort((a, b) -> {
+                    String an = a.optJSONObject("division") != null ? a.getJSONObject("division").optString("name","") : "";
+                    String bn = b.optJSONObject("division") != null ? b.getJSONObject("division").optString("name","") : "";
+                    return Integer.compare(divOrder(an), divOrder(bn));
+                });
+                int seed = 1;
+                for (JSONObject divRec : divs) {
+                    JSONArray teams = divRec.optJSONArray("teamRecords");
+                    if (teams == null || teams.isEmpty()) continue;
+                    JSONObject t = teams.getJSONObject(0); // leader
+                    PlayoffPicture.PlayoffSeed ps = buildSeed(seed++, t, divRec.optJSONObject("division"));
+                    lp.seeds.add(ps);
+                }
+
+                // Seeds 4-6: wild card
+                if (wcRecords != null) {
+                    for (int i = 0; i < wcRecords.length(); i++) {
+                        JSONObject wcRec = wcRecords.getJSONObject(i);
+                        int lid = wcRec.optJSONObject("league") != null
+                                ? wcRec.getJSONObject("league").optInt("id") : 0;
+                        if (lid != leagueId) continue;
+                        JSONArray teams = wcRec.optJSONArray("teamRecords");
+                        if (teams == null) continue;
+                        // Find WC teams (not div leaders), take top 3
+                        int wcCount = 0;
+                        for (int j = 0; j < teams.length() && wcCount < 3; j++) {
+                            JSONObject t = teams.getJSONObject(j);
+                            if (!t.optBoolean("divisionLeader", false)) {
+                                PlayoffPicture.PlayoffSeed ps = buildSeed(seed++, t, null);
+                                lp.seeds.add(ps);
+                                wcCount++;
+                            }
+                        }
+                        break;
+                    }
+                }
+                picture.leagues.add(lp);
+            }
+        } catch (Exception e) {
+            log.error("Error fetching playoff picture: {}", e.getMessage(), e);
+        }
+        return picture;
+    }
+
+    private PlayoffPicture.PlayoffSeed buildSeed(int seed, JSONObject t, JSONObject division) {
+        PlayoffPicture.PlayoffSeed ps = new PlayoffPicture.PlayoffSeed();
+        ps.seed          = seed;
+        ps.teamId        = t.optJSONObject("team") != null ? t.getJSONObject("team").optInt("id") : 0;
+        ps.teamName      = t.optJSONObject("team") != null ? t.getJSONObject("team").optString("name","") : "";
+        ps.teamAbbrev    = t.optJSONObject("team") != null ? t.getJSONObject("team").optString("abbreviation","") : "";
+        ps.wins          = t.optInt("wins", 0);
+        ps.losses        = t.optInt("losses", 0);
+        ps.gb            = t.optString("wildCardGamesBack", t.optString("gamesBack", "-"));
+        ps.isDivLeader   = t.optBoolean("divisionLeader", false);
+        ps.divisionName  = division != null ? division.optString("nameShort", "") : "";
+        ps.magicNumber     = t.optString("magicNumber", "-");
+        ps.eliminationNumber = t.optString("eliminationNumber", "-");
+        String clinch = t.optString("clinchIndicator", "");
+        ps.clinchIndicator = clinch;
+        return ps;
     }
 }
