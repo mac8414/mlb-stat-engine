@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import org.example.model.RosterResponse;
+import org.example.model.NewsItem;
 import org.example.model.GamePlayFeed;
 import org.example.model.LeadersResponse;
 import org.example.model.LiveGameDetail;
@@ -81,6 +83,18 @@ public class PlayerController {
     public TeamScheduleResponse getTeamSchedule(@PathVariable int teamId) {
         log.info("GET /api/schedule/{}", teamId);
         return playerService.getTeamSchedule(teamId);
+    }
+
+    @GetMapping("/roster/{teamId}")
+    public RosterResponse getRoster(@PathVariable int teamId) {
+        log.info("GET /api/roster/{}", teamId);
+        return playerService.getRoster(teamId);
+    }
+
+    @GetMapping("/news")
+    public List<NewsItem> getNews(@RequestParam(required = false) String teamId) {
+        log.info("GET /api/news teamId={}", teamId);
+        return playerService.getNews(teamId);
     }
 
     @GetMapping("/playoff")

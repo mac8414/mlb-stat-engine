@@ -3,6 +3,8 @@ package org.example.model;
 import java.util.List;
 
 public class ScoreboardGame {
+    public int    awayTeamId;
+    public int    homeTeamId;
     public String awayAbbrev;
     public String homeAbbrev;
     public String awayName;

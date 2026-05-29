@@ -467,6 +467,8 @@ public class PlayerService {
 
                 ScoreboardGame sg = new ScoreboardGame();
                 sg.gamePk     = g.optInt("gamePk", 0);
+                sg.awayTeamId = awayTeam.optInt("id", 0);
+                sg.homeTeamId = homeTeam.optInt("id", 0);
                 sg.awayAbbrev = awayTeam.optString("abbreviation", awayTeam.getString("name"));
                 sg.homeAbbrev = homeTeam.optString("abbreviation", homeTeam.getString("name"));
                 sg.awayName   = awayTeam.getString("name");
@@ -1040,6 +1042,217 @@ public class PlayerService {
             log.error("Error fetching playoff picture: {}", e.getMessage(), e);
         }
         return picture;
+    }
+
+    public RosterResponse getRoster(int teamId) {
+        RosterResponse resp = new RosterResponse();
+        resp.pitchers   = new ArrayList<>();
+        resp.catchers   = new ArrayList<>();
+        resp.infielders = new ArrayList<>();
+        resp.outfielders= new ArrayList<>();
+        resp.dh         = new ArrayList<>();
+        try {
+            // Fetch with hitting stats (works for all players; pitchers will have empty splits)
+            String hitUrl = "https://statsapi.mlb.com/api/v1/teams/" + teamId
+                + "/roster?rosterType=active&hydrate=person(stats(type=season,group=hitting))";
+            // Fetch with pitching stats separately
+            String pitUrl = "https://statsapi.mlb.com/api/v1/teams/" + teamId
+                + "/roster?rosterType=active&hydrate=person(stats(type=season,group=pitching))";
+
+            JSONArray hitRoster = new JSONObject(get(hitUrl)).optJSONArray("roster");
+            JSONArray pitRoster = new JSONObject(get(pitUrl)).optJSONArray("roster");
+            if (hitRoster == null) return resp;
+
+            // Build pitching stat map by person id
+            java.util.Map<Integer, JSONObject> pitStats = new java.util.HashMap<>();
+            if (pitRoster != null) {
+                for (int i = 0; i < pitRoster.length(); i++) {
+                    JSONObject entry = pitRoster.getJSONObject(i);
+                    JSONObject person = entry.optJSONObject("person");
+                    if (person == null) continue;
+                    int pid = person.optInt("id");
+                    JSONArray statsArr = person.optJSONArray("stats");
+                    if (statsArr != null) {
+                        for (int s = 0; s < statsArr.length(); s++) {
+                            JSONObject statObj = statsArr.getJSONObject(s);
+                            JSONArray splits = statObj.optJSONArray("splits");
+                            if (splits != null && !splits.isEmpty()) {
+                                JSONObject stat = splits.getJSONObject(0).optJSONObject("stat");
+                                if (stat != null) pitStats.put(pid, stat);
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < hitRoster.length(); i++) {
+                JSONObject entry = hitRoster.getJSONObject(i);
+                JSONObject person = entry.optJSONObject("person");
+                if (person == null) continue;
+
+                RosterResponse.Player p = new RosterResponse.Player();
+                p.id           = person.optInt("id");
+                p.name         = person.optString("fullName","");
+                p.jerseyNumber = entry.optString("jerseyNumber","");
+                p.age          = person.optInt("currentAge", 0);
+                p.height       = person.optString("height","");
+                p.weight       = person.optInt("weight", 0);
+                p.bats         = person.optJSONObject("batSide") != null
+                    ? person.getJSONObject("batSide").optString("code","") : "";
+                p.throws_      = person.optJSONObject("pitchHand") != null
+                    ? person.getJSONObject("pitchHand").optString("code","") : "";
+
+                JSONObject pos = entry.optJSONObject("position");
+                p.position      = pos != null ? pos.optString("name","")         : "";
+                p.positionAbbrev= pos != null ? pos.optString("abbreviation","") : "";
+                String posType  = pos != null ? pos.optString("type","")          : "";
+                p.isPitcher     = "Pitcher".equals(posType);
+
+                // Hitting stats
+                JSONArray statsArr = person.optJSONArray("stats");
+                if (statsArr != null && !statsArr.isEmpty()) {
+                    JSONArray splits = statsArr.getJSONObject(0).optJSONArray("splits");
+                    if (splits != null && !splits.isEmpty()) {
+                        JSONObject stat = splits.getJSONObject(0).optJSONObject("stat");
+                        if (stat != null) {
+                            p.avg        = stat.optString("avg",".---");
+                            p.ops        = stat.optString("ops",".---");
+                            p.hr         = stat.optInt("homeRuns",0);
+                            p.rbi        = stat.optInt("rbi",0);
+                            p.sb         = stat.optInt("stolenBases",0);
+                            p.gamesPlayed= stat.optInt("gamesPlayed",0);
+                        }
+                    }
+                }
+
+                // Pitching stats (from separate call)
+                if (p.isPitcher) {
+                    JSONObject pStat = pitStats.get(p.id);
+                    if (pStat != null) {
+                        p.era    = pStat.optString("era","-.--");
+                        p.whip   = pStat.optString("whip","-.--");
+                        double outs = pStat.optDouble("outs", 0);
+                        int inn = (int)(outs / 3), rem = (int)(outs % 3);
+                        p.ip     = inn + "." + rem;
+                        p.wins   = pStat.optString("wins","0");
+                        p.losses = pStat.optString("losses","0");
+                        p.saves  = pStat.optInt("saves",0);
+                        p.so     = pStat.optInt("strikeOuts",0);
+                        p.gamesPlayed = pStat.optInt("gamesPlayed",0);
+                    }
+                }
+
+                String abbr = p.positionAbbrev;
+                if (p.isPitcher)                                                          resp.pitchers.add(p);
+                else if ("C".equals(abbr))                                                resp.catchers.add(p);
+                else if ("DH".equals(abbr))                                               resp.dh.add(p);
+                else if ("LF".equals(abbr)||"CF".equals(abbr)||"RF".equals(abbr)||"OF".equals(abbr))
+                                                                                          resp.outfielders.add(p);
+                else                                                                      resp.infielders.add(p);
+            }
+
+            // Team info
+            JSONObject teamJson = new JSONObject(get("https://statsapi.mlb.com/api/v1/teams/" + teamId));
+            JSONArray teams = teamJson.optJSONArray("teams");
+            if (teams != null && !teams.isEmpty()) {
+                JSONObject t = teams.getJSONObject(0);
+                resp.teamId    = t.optInt("id", teamId);
+                resp.teamName  = t.optString("name","");
+                resp.teamAbbrev= t.optString("abbreviation","");
+            }
+        } catch (Exception e) {
+            log.error("Error fetching roster teamId={}", teamId, e);
+        }
+        return resp;
+    }
+
+    public List<NewsItem> getNews(String teamId) {
+        List<NewsItem> items = new ArrayList<>();
+        boolean isTeam = teamId != null && !teamId.isBlank() && !teamId.equals("0");
+        try {
+            if (isTeam) {
+                // Use MLB CMS API for team-specific articles
+                String url = "https://dapi.cms.mlbinfra.com/v2/content/en-us/sel-t" + teamId + "-news-list?limit=25";
+                log.debug("Fetching team news: {}", url);
+                JSONObject json = new JSONObject(get(url));
+                JSONArray arr = json.optJSONArray("items");
+                if (arr != null) {
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = arr.getJSONObject(i);
+                        NewsItem item = new NewsItem();
+                        item.title = obj.optString("title", "");
+                        String slug = obj.optString("slug", "");
+                        item.link = slug.isBlank() ? "" : "https://www.mlb.com/news/" + slug;
+                        // author from tags
+                        JSONArray tags = obj.optJSONArray("tags");
+                        if (tags != null) {
+                            for (int t = 0; t < tags.length(); t++) {
+                                JSONObject tag = tags.getJSONObject(t);
+                                if ("customentity.contributor".equals(tag.optString("externalSourceName",""))) {
+                                    item.author = tag.optString("title","");
+                                    break;
+                                }
+                            }
+                        }
+                        if (!item.title.isBlank()) items.add(item);
+                    }
+                }
+            } else {
+                // General MLB news via RSS (has images and dates)
+                String url = "https://www.mlb.com/feeds/news/rss.xml";
+                log.debug("Fetching MLB news RSS");
+                String xml = get(url);
+                int idx = 0;
+                while (items.size() < 25) {
+                    int start = xml.indexOf("<item>", idx);
+                    if (start < 0) break;
+                    int end = xml.indexOf("</item>", start);
+                    if (end < 0) break;
+                    String block = xml.substring(start, end + 7);
+                    idx = end + 7;
+                    NewsItem item = new NewsItem();
+                    item.title   = extractCdata(block, "title");
+                    item.link    = extractTag(block, "link");
+                    item.author  = extractTag(block, "dc:creator");
+                    item.pubDate = extractTag(block, "pubDate");
+                    int imgStart = block.indexOf("<image href=\"");
+                    if (imgStart >= 0) {
+                        int hrefStart = imgStart + 13;
+                        int hrefEnd   = block.indexOf("\"", hrefStart);
+                        if (hrefEnd > hrefStart) item.imageUrl = block.substring(hrefStart, hrefEnd);
+                    }
+                    if (item.title != null && !item.title.isBlank()) items.add(item);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error fetching news teamId={}", teamId, e);
+        }
+        return items;
+    }
+
+    private String extractTag(String xml, String tag) {
+        String open  = "<" + tag + ">";
+        String close = "</" + tag + ">";
+        int s = xml.indexOf(open);
+        if (s < 0) return "";
+        s += open.length();
+        int e = xml.indexOf(close, s);
+        return e < 0 ? "" : xml.substring(s, e).trim();
+    }
+
+    private String extractCdata(String xml, String tag) {
+        String open  = "<" + tag + ">";
+        String close = "</" + tag + ">";
+        int s = xml.indexOf(open);
+        if (s < 0) return "";
+        s += open.length();
+        int e = xml.indexOf(close, s);
+        if (e < 0) return "";
+        String raw = xml.substring(s, e).trim();
+        if (raw.startsWith("<![CDATA[") && raw.endsWith("]]>")) {
+            raw = raw.substring(9, raw.length() - 3).trim();
+        }
+        return raw;
     }
 
     private PlayoffPicture.PlayoffSeed buildSeed(int seed, JSONObject t, JSONObject division) {

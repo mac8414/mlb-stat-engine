@@ -562,6 +562,15 @@
       color: #52c47c;
       white-space: nowrap;
     }
+    .team-link {
+      cursor: pointer;
+      transition: color 0.15s, text-shadow 0.15s;
+    }
+    .team-link:hover {
+      color: #fff;
+      text-shadow: 0 0 8px #52c47c;
+      text-decoration: underline;
+    }
     .inning-table td.rhe-r {
       font-family: 'Oswald', sans-serif;
       font-size: 1.05rem;
@@ -987,6 +996,54 @@
       color: #1e5034;
       padding: 6px 12px 2px;
     }
+    /* ── ROSTER TAB ─────────────────────────────────────────── */
+    .roster-section-label {
+      font-family: 'Oswald', sans-serif; font-size: 0.65rem;
+      letter-spacing: 3px; color: #245c3c; text-transform: uppercase;
+      padding: 16px 0 6px; border-bottom: 1px solid #103c28; margin-bottom: 2px;
+    }
+    .roster-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 20px; }
+    .roster-table th {
+      font-family: 'Oswald', sans-serif; font-size: 0.6rem; letter-spacing: 2px;
+      color: #245c3c; text-transform: uppercase; padding: 6px 10px;
+      text-align: left; border-bottom: 1px solid #103c28; white-space: nowrap;
+    }
+    .roster-table th.num { text-align: center; width: 36px; }
+    .roster-table th.stat { text-align: right; }
+    .roster-table td { padding: 8px 10px; border-bottom: 1px solid #0b2014; color: #d0d0c0; vertical-align: middle; }
+    .roster-table tr:hover td { background: #0b2014; }
+    .roster-table td.num { text-align: center; color: #006747; font-family: 'Oswald', sans-serif; }
+    .roster-table td.name { color: #f0f0e0; font-family: 'Oswald', sans-serif; font-size: 0.9rem; cursor: pointer; }
+    .roster-table td.name:hover { color: #52c47c; }
+    .roster-table td.pos { color: #006747; font-size: 0.7rem; letter-spacing: 1px; }
+    .roster-table td.stat { text-align: right; }
+    .roster-table td.stat.key { color: #52c47c; font-family: 'Oswald', sans-serif; }
+    /* ── NEWS TAB ───────────────────────────────────────────── */
+    .news-team-btn {
+      display: block; width: 100%; text-align: left;
+      background: none; border: none; border-left: 3px solid transparent;
+      color: #1e5034; font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem; padding: 7px 16px; cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .news-team-btn:hover { color: #52c47c; background: #071a0e; border-left-color: #006747; }
+    .news-team-btn.active { color: #52c47c; border-left-color: #006747; background: #0b2014; }
+    .news-card {
+      display: flex; gap: 16px; padding: 16px 0;
+      border-bottom: 1px solid #103c28;
+    }
+    .news-card:last-child { border-bottom: none; }
+    .news-card img {
+      width: 140px; height: 90px; object-fit: cover; flex-shrink: 0;
+      border: 1px solid #103c28; border-radius: 2px;
+    }
+    .news-card-body { flex: 1; min-width: 0; }
+    .news-card-title {
+      font-family: 'Oswald', sans-serif; font-size: 1rem; color: #f0f0e0;
+      text-decoration: none; line-height: 1.3; display: block; margin-bottom: 6px;
+    }
+    .news-card-title:hover { color: #52c47c; }
+    .news-card-meta { font-size: 0.68rem; color: #245c3c; letter-spacing: 1px; }
   </style>
 </head>
 <body>
@@ -1002,11 +1059,13 @@
 </header>
 
 <nav class="tab-bar">
-  <button class="tab-btn active" id="tab-stats" onclick="switchTab('stats')">&#9644; Stats</button>
+  <button class="tab-btn active" id="tab-stats" onclick="switchTab('stats')">&#9644; Home</button>
   <button class="tab-btn" id="tab-scoreboard" onclick="switchTab('scoreboard')">&#9644; Scoreboard</button>
-  <button class="tab-btn" id="tab-standings" onclick="switchTab('standings')">&#9644; Standings</button>
   <button class="tab-btn" id="tab-schedule" onclick="switchTab('schedule')">&#9644; Schedule</button>
+  <button class="tab-btn" id="tab-roster" onclick="switchTab('roster')">&#9644; Roster</button>
+  <button class="tab-btn" id="tab-standings" onclick="switchTab('standings')">&#9644; Standings</button>
   <button class="tab-btn" id="tab-playoff" onclick="switchTab('playoff')">&#9644; Playoff Picture</button>
+  <button class="tab-btn" id="tab-news" onclick="switchTab('news')">&#9644; News</button>
 </nav>
 
 <div id="stats-view">
@@ -1111,9 +1170,74 @@
   </div>
 </div>
 
+<div id="roster-view" class="hidden">
+  <div style="padding:28px 32px;max-width:1100px;margin:0 auto">
+    <div class="scoreboard-panel" style="margin-bottom:20px">
+      <div class="panel-label">Team Roster</div>
+      <div class="panel-body">
+        <div class="input-row">
+          <select id="roster-team" class="search-input" style="max-width:260px"></select>
+          <button class="search-btn" onclick="loadRoster()">Load</button>
+        </div>
+      </div>
+    </div>
+    <div id="roster-board"></div>
+  </div>
+</div>
+
 <div id="playoff-view" class="hidden">
   <div style="padding:28px 32px;max-width:1100px;margin:0 auto">
     <div id="playoff-board"><div class="spinner">[ LOADING... ]</div></div>
+  </div>
+</div>
+
+<div id="news-view" class="hidden">
+  <div style="display:flex;min-height:80vh">
+    <!-- Team sidebar -->
+    <div id="news-sidebar" style="width:180px;flex-shrink:0;background:#071a0e;border-right:1px solid #103c28;padding:12px 0;overflow-y:auto">
+      <div style="font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:3px;color:#245c3c;padding:8px 16px 12px">FILTER BY TEAM</div>
+      <button class="news-team-btn active" data-teamid="0" onclick="selectNewsTeam(this,0)">⚾ All MLB News</button>
+      <div style="font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:2px;color:#245c3c;padding:10px 16px 4px">AL EAST</div>
+      <button class="news-team-btn" data-teamid="111" onclick="selectNewsTeam(this,111)">Boston Red Sox</button>
+      <button class="news-team-btn" data-teamid="147" onclick="selectNewsTeam(this,147)">New York Yankees</button>
+      <button class="news-team-btn" data-teamid="141" onclick="selectNewsTeam(this,141)">Toronto Blue Jays</button>
+      <button class="news-team-btn" data-teamid="110" onclick="selectNewsTeam(this,110)">Baltimore Orioles</button>
+      <button class="news-team-btn" data-teamid="139" onclick="selectNewsTeam(this,139)">Tampa Bay Rays</button>
+      <div style="font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:2px;color:#245c3c;padding:10px 16px 4px">AL CENTRAL</div>
+      <button class="news-team-btn" data-teamid="145" onclick="selectNewsTeam(this,145)">Chicago White Sox</button>
+      <button class="news-team-btn" data-teamid="114" onclick="selectNewsTeam(this,114)">Cleveland Guardians</button>
+      <button class="news-team-btn" data-teamid="116" onclick="selectNewsTeam(this,116)">Detroit Tigers</button>
+      <button class="news-team-btn" data-teamid="118" onclick="selectNewsTeam(this,118)">Kansas City Royals</button>
+      <button class="news-team-btn" data-teamid="142" onclick="selectNewsTeam(this,142)">Minnesota Twins</button>
+      <div style="font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:2px;color:#245c3c;padding:10px 16px 4px">AL WEST</div>
+      <button class="news-team-btn" data-teamid="117" onclick="selectNewsTeam(this,117)">Houston Astros</button>
+      <button class="news-team-btn" data-teamid="108" onclick="selectNewsTeam(this,108)">Los Angeles Angels</button>
+      <button class="news-team-btn" data-teamid="133" onclick="selectNewsTeam(this,133)">Oakland Athletics</button>
+      <button class="news-team-btn" data-teamid="136" onclick="selectNewsTeam(this,136)">Seattle Mariners</button>
+      <button class="news-team-btn" data-teamid="140" onclick="selectNewsTeam(this,140)">Texas Rangers</button>
+      <div style="font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:2px;color:#245c3c;padding:10px 16px 4px">NL EAST</div>
+      <button class="news-team-btn" data-teamid="144" onclick="selectNewsTeam(this,144)">Atlanta Braves</button>
+      <button class="news-team-btn" data-teamid="146" onclick="selectNewsTeam(this,146)">Miami Marlins</button>
+      <button class="news-team-btn" data-teamid="121" onclick="selectNewsTeam(this,121)">New York Mets</button>
+      <button class="news-team-btn" data-teamid="143" onclick="selectNewsTeam(this,143)">Philadelphia Phillies</button>
+      <button class="news-team-btn" data-teamid="120" onclick="selectNewsTeam(this,120)">Washington Nationals</button>
+      <div style="font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:2px;color:#245c3c;padding:10px 16px 4px">NL CENTRAL</div>
+      <button class="news-team-btn" data-teamid="112" onclick="selectNewsTeam(this,112)">Chicago Cubs</button>
+      <button class="news-team-btn" data-teamid="113" onclick="selectNewsTeam(this,113)">Cincinnati Reds</button>
+      <button class="news-team-btn" data-teamid="115" onclick="selectNewsTeam(this,115)">Colorado Rockies</button>
+      <button class="news-team-btn" data-teamid="158" onclick="selectNewsTeam(this,158)">Milwaukee Brewers</button>
+      <button class="news-team-btn" data-teamid="134" onclick="selectNewsTeam(this,134)">Pittsburgh Pirates</button>
+      <button class="news-team-btn" data-teamid="138" onclick="selectNewsTeam(this,138)">St. Louis Cardinals</button>
+      <div style="font-family:'Oswald',sans-serif;font-size:0.55rem;letter-spacing:2px;color:#245c3c;padding:10px 16px 4px">NL WEST</div>
+      <button class="news-team-btn" data-teamid="109" onclick="selectNewsTeam(this,109)">Arizona Diamondbacks</button>
+      <button class="news-team-btn" data-teamid="119" onclick="selectNewsTeam(this,119)">Los Angeles Dodgers</button>
+      <button class="news-team-btn" data-teamid="135" onclick="selectNewsTeam(this,135)">San Diego Padres</button>
+      <button class="news-team-btn" data-teamid="137" onclick="selectNewsTeam(this,137)">San Francisco Giants</button>
+    </div>
+    <!-- News feed -->
+    <div style="flex:1;padding:24px 32px;overflow-y:auto">
+      <div id="news-feed"><div class="spinner">[ LOADING... ]</div></div>
+    </div>
   </div>
 </div>
 
@@ -1357,16 +1481,34 @@
     searchPlayer();
   }
 
+  // ─── CROSS-TAB NAVIGATION HELPERS ──────────────────────────
+  function goToSchedule(teamId) {
+    const sel = document.getElementById('schedule-team');
+    initScheduleTeams();
+    sel.value = teamId;
+    switchTab('schedule');
+    loadSchedule();
+  }
+  function goToRoster(teamId) {
+    const sel = document.getElementById('roster-team');
+    initRosterTeams();
+    sel.value = teamId;
+    switchTab('roster');
+    loadRoster();
+  }
+
   // ─── TAB SWITCHING ───────────────────────────────────────────
   function switchTab(tab) {
-    ['stats','scoreboard','standings','schedule','playoff'].forEach(t => {
+    ['stats','scoreboard','schedule','roster','standings','playoff','news'].forEach(t => {
       document.getElementById(t + '-view').classList.toggle('hidden', t !== tab);
       document.getElementById('tab-' + t).classList.toggle('active', t === tab);
     });
     if (tab === 'scoreboard' && !scoreboardInterval) startScoreboard();
     if (tab === 'standings') loadStandings();
     if (tab === 'schedule') initScheduleTeams();
+    if (tab === 'roster')   initRosterTeams();
     if (tab === 'playoff') loadPlayoffPicture();
+    if (tab === 'news') loadNews(0);
   }
 
   // ─── SCOREBOARD ──────────────────────────────────────────────
@@ -1581,11 +1723,11 @@
 
       rows += `
         <tr>
-          <td class="team-col">${g.awayAbbrev}</td>
+          <td class="team-col"><span class="team-link" onclick="goToSchedule(${g.awayTeamId})">${g.awayAbbrev}</span></td>
           ${awayInn}${awayR}${awayH}${awayE}
         </tr>
         <tr>
-          <td class="team-col">${g.homeAbbrev}</td>
+          <td class="team-col"><span class="team-link" onclick="goToSchedule(${g.homeTeamId})">${g.homeAbbrev}</span></td>
           ${homeInn}${homeR}${homeH}${homeE}
         </tr>
         ${g.isLive ? `
@@ -1899,7 +2041,7 @@
       el.innerHTML = `
         <div class="leaders-board" style="margin-bottom:20px">
           <div class="leaders-title">
-            <span class="lt-name">&#004e38; ${data.year} World Series</span>
+            <span class="lt-name">&#9644; ${data.year} World Series</span>
             <span class="lt-range">${dateStr}</span>
           </div>
           <div style="padding:16px 20px;display:flex;align-items:center;gap:20px">
@@ -1953,7 +2095,7 @@
       el.innerHTML = `
         <div class="leaders-board" style="margin-bottom:20px">
           <div class="leaders-title">
-            <span class="lt-name">&#004e38; ${winner} — World Series Titles</span>
+            <span class="lt-name">&#9644; ${winner} — World Series Titles</span>
             <span class="lt-range">${wins.length} Championship${wins.length !== 1 ? 's' : ''}</span>
           </div>
           <div style="padding:12px 20px;display:flex;align-items:flex-start;gap:24px">
@@ -2012,7 +2154,7 @@
             <img src="https://www.mlbstatic.com/team-logos/team-cap-on-dark/${t.teamId}.svg"
                  style="width:18px;height:18px;vertical-align:middle;margin-right:6px;opacity:0.85"
                  onerror="this.style.display='none'"/>
-            ${t.teamName}
+            <span class="team-link" onclick="goToSchedule(${t.teamId})">${t.teamName}</span>
           </td>
           <td class="wl">${t.wins}-${t.losses}</td>
           <td class="pct">${t.pct}</td>
@@ -2122,7 +2264,7 @@
       return `<tr class="${isToday?'today-row':''}">
         <td>${g.date}</td>
         <td><span class="sched-home">${atHome ? 'vs' : '@'}</span></td>
-        <td class="sched-opp">${oppLogo}${g.opponentAbbrev}</td>
+        <td class="sched-opp"><span class="team-link" onclick="goToSchedule(${g.opponentId})">${oppLogo}${g.opponentAbbrev}</span></td>
         <td>${resultHtml}</td>
         <td>${record}</td>
         <td>${tvHtml}</td>
@@ -2133,10 +2275,10 @@
 
     el.innerHTML = `
       <div class="schedule-record" style="display:flex;align-items:center;gap:16px;color:${teamColor};filter:brightness(1.5)">
-        <img src="https://www.mlbstatic.com/team-logos/${data.teamId}.svg" style="width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 0 6px ${teamColor}88)" onerror="this.style.display='none'"/>
+        <img src="https://www.mlbstatic.com/team-logos/${data.teamId}.svg" style="width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 0 6px ${teamColor}88);cursor:pointer" onclick="goToRoster(${data.teamId})" onerror="this.style.display='none'"/>
         <div>
           <div style="font-size:1.3rem;letter-spacing:2px">${data.teamName}</div>
-          <div style="color:#245c3c;font-size:0.75rem;letter-spacing:1px">${data.wins}-${data.losses} &nbsp; (${new Date().getFullYear()} Season)</div>
+          <div style="color:#245c3c;font-size:0.75rem;letter-spacing:1px">${data.wins}-${data.losses} &nbsp; (${new Date().getFullYear()} Season) &nbsp; <span class="team-link" style="font-size:0.7rem" onclick="goToRoster(${data.teamId})">VIEW ROSTER →</span></div>
         </div>
       </div>
       <div class="sb-board" style="margin-bottom:20px">
@@ -2178,10 +2320,10 @@
         <div class="seed-num">${s.seed}</div>
         <div class="seed-logo">
           <img src="https://www.mlbstatic.com/team-logos/team-cap-on-dark/${s.teamId}.svg"
-               onerror="this.style.display='none'" />
+               onerror="this.style.display='none'" onclick="goToSchedule(${s.teamId})" class="team-link" style="cursor:pointer"/>
         </div>
         <div class="seed-info">
-          <div class="seed-name">${s.teamAbbrev} ${clinch}</div>
+          <div class="seed-name"><span class="team-link" onclick="goToSchedule(${s.teamId})">${s.teamAbbrev}</span> ${clinch}</div>
           <div class="seed-div">${isDivLeader ? s.divisionName : 'Wild Card'}</div>
         </div>
         <div class="seed-wl">${s.wins}-${s.losses}</div>
@@ -2366,6 +2508,151 @@
 
   // Legacy alias
   function renderBoxScore(d, away, home) { return renderLineup(d, null, away, home); }
+
+  // ─── ROSTER ───────────────────────────────────────────────────
+  let rosterTeamsInited = false;
+  function initRosterTeams() {
+    if (rosterTeamsInited) return;
+    rosterTeamsInited = true;
+    const sel = document.getElementById('roster-team');
+    MLB_TEAMS.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.id; opt.textContent = t.name;
+      sel.appendChild(opt);
+    });
+  }
+
+  async function loadRoster() {
+    const teamId = document.getElementById('roster-team').value;
+    if (!teamId) return;
+    const board = document.getElementById('roster-board');
+    board.innerHTML = '<div class="spinner">[ LOADING... ]</div>';
+    let data;
+    try {
+      data = await fetch(`/api/roster/${teamId}`).then(r => r.json());
+    } catch(e) {
+      board.innerHTML = '<div class="error-msg">Error loading roster.</div>';
+      return;
+    }
+
+    const teamColor = TEAM_COLORS[data.teamName] || TEAM_COLORS[data.teamAbbrev] || '#006747';
+    const logoUrl = `https://www.mlbstatic.com/team-logos/${data.teamId}.svg`;
+
+    function rosterTable(players, isPitcher) {
+      if (!players || players.length === 0) return '';
+      const headers = isPitcher
+        ? ['#','NAME','POS','B/T','AGE','HT','WT','G','W-L','ERA','WHIP','IP','SO','SV']
+        : ['#','NAME','POS','B/T','AGE','HT','WT','G','AVG','OPS','HR','RBI','SB'];
+      const ths = headers.map(h => `<th class="${['G','W-L','ERA','WHIP','IP','SO','SV','AVG','OPS','HR','RBI','SB'].includes(h)?'stat':''}${h==='#'?'num':''}">${h}</th>`).join('');
+      const rows = players.map(p => {
+        const bt = [p.bats||'',p.throws_||''].filter(Boolean).join('/') || '-';
+        const ht = p.height||'-';
+        const wt = p.weight||'-';
+        const g  = p.gamesPlayed||0;
+        const cells = isPitcher
+          ? [
+              `<td class="num">${p.jerseyNumber||''}</td>`,
+              `<td class="name" onclick="quickPlayerSearch('${p.name.replace(/'/g,"\\'")}','')">${p.name}</td>`,
+              `<td class="pos">${p.positionAbbrev||p.position||''}</td>`,
+              `<td>${bt}</td><td>${p.age||'-'}</td><td>${ht}</td><td>${wt}</td>`,
+              `<td class="stat">${g}</td>`,
+              `<td class="stat key">${p.wins||0}-${p.losses||0}</td>`,
+              `<td class="stat key">${p.era||'-.--'}</td>`,
+              `<td class="stat">${p.whip||'-.--'}</td>`,
+              `<td class="stat">${p.ip||'0.0'}</td>`,
+              `<td class="stat">${p.so||0}</td>`,
+              `<td class="stat">${p.saves||0}</td>`,
+            ]
+          : [
+              `<td class="num">${p.jerseyNumber||''}</td>`,
+              `<td class="name" onclick="quickPlayerSearch('${p.name.replace(/'/g,"\\'")}','')">${p.name}</td>`,
+              `<td class="pos">${p.positionAbbrev||p.position||''}</td>`,
+              `<td>${bt}</td><td>${p.age||'-'}</td><td>${ht}</td><td>${wt}</td>`,
+              `<td class="stat">${g}</td>`,
+              `<td class="stat key">${p.avg||'.---'}</td>`,
+              `<td class="stat key">${p.ops||'.---'}</td>`,
+              `<td class="stat">${p.hr||0}</td>`,
+              `<td class="stat">${p.rbi||0}</td>`,
+              `<td class="stat">${p.sb||0}</td>`,
+            ];
+        return `<tr>${cells.join('')}</tr>`;
+      }).join('');
+      return `<table class="roster-table"><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
+    }
+
+    const sections = [
+      { label: 'PITCHERS',   players: data.pitchers,   pitcher: true  },
+      { label: 'CATCHERS',   players: data.catchers,   pitcher: false },
+      { label: 'INFIELDERS', players: data.infielders, pitcher: false },
+      { label: 'OUTFIELDERS',players: data.outfielders,pitcher: false },
+      { label: 'DESIGNATED HITTERS', players: data.dh, pitcher: false },
+    ].filter(s => s.players && s.players.length > 0);
+
+    board.innerHTML = `
+      <div style="display:flex;align-items:center;gap:20px;margin-bottom:24px">
+        <img src="${logoUrl}" alt="${data.teamName}"
+             style="width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 0 10px ${teamColor}88);cursor:pointer"
+             onclick="goToSchedule(${data.teamId})"
+             onerror="this.style.display='none'"/>
+        <div>
+          <div style="font-family:'Oswald',sans-serif;font-size:1.6rem;color:${teamColor};filter:brightness(1.4)">${data.teamName}</div>
+          <div style="font-size:0.65rem;letter-spacing:3px;color:#245c3c;margin-top:2px">2026 ACTIVE ROSTER · ${
+            (data.pitchers?.length||0)+(data.catchers?.length||0)+(data.infielders?.length||0)+(data.outfielders?.length||0)+(data.dh?.length||0)
+          } PLAYERS &nbsp; <span class="team-link" style="font-size:0.65rem" onclick="goToSchedule(${data.teamId})">VIEW SCHEDULE →</span></div>
+        </div>
+      </div>
+      ${sections.map(s => `
+        <div class="roster-section-label">${s.label}</div>
+        ${rosterTable(s.players, s.pitcher)}
+      `).join('')}`;
+  }
+
+  function quickPlayerSearch(name, year) {
+    switchTab('stats');
+    document.getElementById('player-name').value = name;
+    document.getElementById('player-year').value = year || new Date().getFullYear();
+    searchPlayer();
+  }
+
+  // ─── NEWS ─────────────────────────────────────────────────────
+  let currentNewsTeamId = 0;
+
+  function selectNewsTeam(btn, teamId) {
+    document.querySelectorAll('.news-team-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadNews(teamId);
+  }
+
+  async function loadNews(teamId) {
+    currentNewsTeamId = teamId;
+    const feed = document.getElementById('news-feed');
+    feed.innerHTML = '<div class="spinner">[ LOADING... ]</div>';
+    let articles;
+    try {
+      const params = teamId ? `?teamId=${teamId}` : '';
+      articles = await fetch('/api/news' + params).then(r => r.json());
+    } catch(e) {
+      feed.innerHTML = '<div class="error-msg">Error loading news.</div>';
+      return;
+    }
+    if (!articles || articles.length === 0) {
+      feed.innerHTML = '<div class="error-msg">No articles found.</div>';
+      return;
+    }
+    feed.innerHTML = articles.map(a => {
+      const date = a.pubDate ? new Date(a.pubDate).toLocaleDateString([], {month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit'}) : '';
+      const meta = [a.author, date].filter(Boolean).join('  ·  ');
+      const img = a.imageUrl ? `<img src="${a.imageUrl}" alt="" onerror="this.style.display='none'"/>` : '';
+      return `
+        <div class="news-card">
+          ${img}
+          <div class="news-card-body">
+            <a class="news-card-title" href="${a.link}" target="_blank" rel="noopener">${a.title}</a>
+            <div class="news-card-meta">${meta}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
 </script>
 </body>
 </html>
